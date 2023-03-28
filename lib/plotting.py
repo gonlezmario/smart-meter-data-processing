@@ -28,6 +28,6 @@ def update_plots(new_data):
     plt.pause(0.001)
 
 # Example usage
-while True:
-    new_data = receive_data_from_module()  # Replace with actual function to receive data
-    update_plots(new_data)
+# while True:
+#     new_data = receive_data_from_module()  # Replace with actual function to receive data
+#     update_plots(new_data)

@@ -14,6 +14,7 @@ class MQTTClientService:
         mqtt_subscriber.disconnect()
 
     def main(self) -> None:
+        logging.info("Connected. Running program...")
         while not self.stop_main:
             time.sleep(1)
 
@@ -34,7 +35,8 @@ if __name__ == "__main__":
         logging.info("Initializing MQTT Client Service...")
         service = MQTTClientService()
         logging.info("Trying to connect to the MQTT broker...")
-        mqtt_subscriber = MQTTSubscriber("localhost", "smart_meter")
+        mqtt_subscriber = MQTTSubscriber(
+            broker_address="localhost", port=1883, topic="smart_meter")
         mqtt_subscriber.connect()
         logging.info("Connected. Running main loop...")
         service.main()

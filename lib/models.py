@@ -9,10 +9,8 @@ from lib.config import DATABASE_URL
 
 """
 This module contains the ORM model of the SQL database where measurements are
-stored after being succesfully processed.
+stored after being successfully processed.
 """
-
-measurements = TypeVar('measurements', bound='Measurement')
 
 
 Base = declarative_base()
@@ -23,10 +21,12 @@ class Measurement(Base):
 
     id = Column(Integer, primary_key=True)
     timestamp = Column(Integer)
-    voltage = Column(JSON)
-    current = Column(JSON)
-    power = Column(JSON)
-    error = Column(String)
+    voltage_1 = Column(Integer)
+    voltage_2 = Column(Integer)
+    voltage_3 = Column(Integer)
+    current_1 = Column(Integer)
+    current_2 = Column(Integer)
+    current_3 = Column(Integer)
 
     @staticmethod
     def _session_initialization() -> sessionmaker:
@@ -44,15 +44,22 @@ class Measurement(Base):
         return session
 
     @classmethod
-    def create_measurement(cls, timestamp, voltage, current, power, error='') -> bool:
+    def create_measurement(cls, timestamp, voltage_1, voltage_2, voltage_3, current_1, current_2, current_3) -> bool:
         """
         Initializes a session, creates a class instance with the given parameters and commits them
         to the database.
         """
         try:
             session = cls._session_initialization()
-            measurement = cls(timestamp=timestamp, voltage=voltage,
-                              current=current, power=power, error=error)
+            measurement = cls(
+                timestamp=timestamp,
+                voltage_1=voltage_1,
+                voltage_2=voltage_2,
+                voltage_3=voltage_3,
+                current_1=current_1,
+                current_2=current_2,
+                current_3=current_3,
+            )
             session.add(measurement)
             session.commit()
             return True
@@ -60,3 +67,7 @@ class Measurement(Base):
             logging.error(
                 "Unhandled error creating a measurement row in the database: %s" % e)
             return False
+
+
+# Create the model table if it does not exist
+Base.metadata.create_all(bind=create_engine(DATABASE_URL))

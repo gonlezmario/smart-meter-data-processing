@@ -1,8 +1,7 @@
 import configparser
 import logging
-from typing import TypeVar
 
-from sqlalchemy import JSON, Boolean, Column, Integer, String, create_engine
+from sqlalchemy import JSON, Boolean, Column, Integer, create_engine, func
 from sqlalchemy.orm import declarative_base, scoped_session, sessionmaker
 
 from lib.config import DATABASE_URL
@@ -67,6 +66,19 @@ class Measurement(Base):
             logging.error(
                 "Unhandled error creating a measurement row in the database: %s" % e)
             return False
+
+    @classmethod
+    def query_latest_measurements(cls) -> list:
+        """
+        Query all the measurements from a the latest available timestamp,
+        ordered in a list from oldest to newest
+        """
+        session = cls._session_initialization()
+        max_timestamp = session.query(Measurement.timestamp).order_by(
+            Measurement.timestamp.desc()).limit(1).scalar()
+        entries = session.query(Measurement).filter_by(
+            timestamp=max_timestamp).order_by(Measurement.id.asc()).all()
+        return entries
 
 
 # Create the model table if it does not exist

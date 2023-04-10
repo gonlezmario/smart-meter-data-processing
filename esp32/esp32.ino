@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
+#include "access_point.h"
 
 // WiFi configuration
 String wifi_ssid = "ESP32 Acces Point"; // Variable to store the user input SSID
@@ -13,6 +14,12 @@ String mqtt_username = "Enter the MQTT Username";
 String mqtt_password = "Enter the MQTT Password";
 String mqtt_topic = "Enter the MQTT Topic";
 
+// NTP server to request epoch time
+const char* ntpServer = "pool.ntp.org";
+
+// Variable to save current epoch time
+unsigned long epochTime; 
+
 // Pins for voltage and current sensors
 const int VOLTAGE_SENSOR_1_PIN = 2;
 const int VOLTAGE_SENSOR_2_PIN = 3;
@@ -22,6 +29,18 @@ const int CURRENT_SENSOR_2_PIN = 6;
 const int CURRENT_SENSOR_3_PIN = 7;
 
 AsyncWebServer server(80); // Create an AsyncWebServer instance with port 80
+
+// Function that gets current epoch time
+unsigned long getTime() {
+  time_t now;
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo)) {
+    //Serial.println("Failed to obtain time");
+    return(0);
+  }
+  time(&now);
+  return now;
+}
 
 void setup() {
   Serial.begin(115200);
@@ -75,11 +94,13 @@ void setup() {
     });
 
   server.begin();
+  
 }
 
 void loop() {
   // Attempt to connect to the WiFi network with user input
   if (received_wifi_data == true){
+    configTime(0, 0, ntpServer);
     Serial.print("WiFi SSID: ");
     Serial.println(wifi_ssid);
     Serial.print("WiFi Password: ");
@@ -94,6 +115,9 @@ void loop() {
     Serial.println(mqtt_password);
     Serial.print("MQTT Topic: ");
     Serial.println(mqtt_topic);
+    Serial.print("Current time: ");
+    Serial.println(getTime());
     received_wifi_data = false;
   }
+  epochTime = getTime();
 }

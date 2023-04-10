@@ -1,17 +1,24 @@
 import configparser
+import logging
 from typing import TypeVar
 
-from sqlalchemy import Column, Integer, JSON, String, Boolean, create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import JSON, Boolean, Column, Integer, String, create_engine
+from sqlalchemy.orm import declarative_base, scoped_session, sessionmaker
 
+from lib.config import DATABASE_URL
 
-measurements = TypeVar('measurements', bound='Measurements')
+"""
+This module contains the ORM model of the SQL database where measurements are
+stored after being succesfully processed.
+"""
+
+measurements = TypeVar('measurements', bound='Measurement')
 
 
 Base = declarative_base()
 
 
-class Measurements(Base):
+class Measurement(Base):
     __tablename__ = 'measurements'
 
     id = Column(Integer, primary_key=True)
@@ -20,30 +27,36 @@ class Measurements(Base):
     current = Column(JSON)
     power = Column(JSON)
     error = Column(String)
-    processed = Column(Boolean, default=False)
 
     @staticmethod
     def _session_initialization() -> sessionmaker:
-        config = configparser.ConfigParser()
-        config.read('config.ini')
+        """
+        Method called from other Class methods to follow DRY principles and
+        improve sustainability.
 
-        engine = create_engine(config.get('database', 'url'))
-        Session = sessionmaker(bind=engine)
+        Scoped session to make sure a unique object is handled per thread and
+        the session is automatically closed whenever it is no longer used
+
+        """
+        engine = create_engine(DATABASE_URL)
+        Session = scoped_session(sessionmaker(bind=engine))
         session = Session()
         return session
 
     @classmethod
-    def get_pending_measurements(cls) -> measurements:
-        session = cls._session_initialization()
-        measurements = session.query(cls).filter_by(pending=True, error='').all()
-        session.close()
-        return measurements
-
-    @classmethod
-    def set_not_pending(cls, measurement_id: int) -> None:
-        session = cls._session_initialization()
-        measurement = session.query(cls).filter_by(id=measurement_id).one_or_none()
-        if measurement:
-            measurement.pending = False
+    def create_measurement(cls, timestamp, voltage, current, power, error='') -> bool:
+        """
+        Initializes a session, creates a class instance with the given parameters and commits them
+        to the database.
+        """
+        try:
+            session = cls._session_initialization()
+            measurement = cls(timestamp=timestamp, voltage=voltage,
+                              current=current, power=power, error=error)
+            session.add(measurement)
             session.commit()
-        session.close()
+            return True
+        except Exception as e:
+            logging.error(
+                "Unhandled error creating a measurement row in the database: %s" % e)
+            return False

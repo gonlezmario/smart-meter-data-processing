@@ -7,11 +7,14 @@
     "cSpell.words": [
         "keepalive",
         "levelname",
+        "linspace",
         "Mosquitto",
         "MQTT",
         "paho",
         "sessionmaker",
         "sqlalchemy",
-        "userdata"
+        "userdata",
+        "xdata",
+        "ydata"
     ]
 }

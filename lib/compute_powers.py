@@ -1,104 +1,99 @@
 import numpy as np
-from scipy.optimize import curve_fit
-
-from lib.models import Measurement
 
 
-class ModelSignals:
-    def __init__(self) -> None:
-        last_measurements = Measurement.query_latest_measurements()
+class ComputePowers:
+    def __init__(
+            self,
+            voltage_1_data_points,
+            voltage_2_data_points,
+            voltage_3_data_points,
+            current_1_data_points,
+            current_2_data_points,
+            current_3_data_points,
+    ) -> None:
 
-        self.voltage_1_data_points = []
-        self.voltage_2_data_points = []
-        self.voltage_3_data_points = []
-        self.current_1_data_points = []
-        self.current_2_data_points = []
-        self.current_3_data_points = []
+        self.__voltage_1_data_points = voltage_1_data_points
+        self.__voltage_2_data_points = voltage_2_data_points
+        self.__voltage_3_data_points = voltage_3_data_points
+        self.__current_1_data_points = current_1_data_points
+        self.__current_2_data_points = current_2_data_points
+        self.__current_3_data_points = current_3_data_points
 
-        for measurement in last_measurements:
-            self.voltage_1_data_points.append(measurement.voltage_1)
-            self.voltage_2_data_points.append(measurement.voltage_2)
-            self.voltage_3_data_points.append(measurement.voltage_3)
-            self.current_1_data_points.append(measurement.current_1)
-            self.current_2_data_points.append(measurement.current_2)
-            self.current_3_data_points.append(measurement.current_3)
+        self.voltage_1 = np.mean(voltage_1_data_points)
+        self.voltage_2 = np.mean(voltage_2_data_points)
+        self.voltage_3 = np.mean(voltage_3_data_points)
+        self.current_1 = np.mean(current_1_data_points)
+        self.current_2 = np.mean(current_2_data_points)
+        self.current_3 = np.mean(current_3_data_points)
+        self.active_power = self.get_total_active_power()
+        self.reactive_power = self.get_total_reactive_power()
+        self.apparent_power = self.get_total_apparent_power()
+        self.power_factor = self.get_power_factor()
 
-        self.data_set_length = len(self.last_measurements)
-        self.timestamp_n = np.linspace(0, 1, self.data_set_length)
+    def get_total_active_power(self) -> float:
+        active_power_1 = np.sum([voltage_1 * current_1
+                                 for voltage_1, current_1 in zip(
+                                     self.__voltage_1_data_points,
+                                     self.__current_1_data_points
+                                 )])
 
-    def sine_signal(x, frequency, amplitude, phase, offset):
-        return amplitude * np.sin(2 * np.pi * frequency * x + phase) + offset
+        active_power_2 = np.sum([voltage_2 * current_2
+                                 for voltage_2, current_2 in zip(
+                                     self.__voltage_2_data_points,
+                                     self.__current_2_data_points
+                                 )])
+        active_power_3 = np.sum([voltage_3 * current_3
+                                 for voltage_3, current_3 in zip(
+                                     self.__voltage_3_data_points,
+                                     self.__current_3_data_points
+                                 )])
+        total_active_power = active_power_1 + active_power_2 + active_power_3
+        return total_active_power
 
-    def get_voltage_signals(self):
-        frequency_guess = 50  # Hz
-        amplitude_guess = 220  # V
-        phase_guess = 0  # radians
-        offset_guess = 0  # V
-        initial_guess = [frequency_guess,
-                         amplitude_guess, phase_guess, offset_guess]
+    def get_rms_values(self) -> tuple[
+            float, float, float, float, float, float,
+    ]:
 
-        voltage_1_signal, voltage_1_covariance = curve_fit(
-            f=self.sine_signal, xdata=self.timestamp_n, ydata=self.voltage_1_data_points, p0=initial_guess)
-        voltage_2_signal, voltage_2_covariance = curve_fit(
-            f=self.sine_signal, xdata=self.timestamp_n, ydata=self.voltage_2_data_points, p0=initial_guess)
-        voltage_3_signal, voltage_3_covariance = curve_fit(
-            f=self.sine_signal, xdata=self.timestamp_n, ydata=self.voltage_3_data_points, p0=initial_guess)
+        def get_root_mean_square(data_points: list) -> float:
+            squared_measurements = np.square(data_points)
+            mean = np.mean(squared_measurements)
+            rms_value = np.sqrt(mean)
+            return rms_value
 
-        return voltage_1_signal, voltage_2_signal, voltage_3_signal
+        v_1_rms = get_root_mean_square(self.__voltage_1_data_points)
+        v_2_rms = get_root_mean_square(self.__voltage_2_data_points)
+        v_3_rms = get_root_mean_square(self.__voltage_3_data_points)
+        i_1_rms = get_root_mean_square(self.__current_1_data_points)
+        i_2_rms = get_root_mean_square(self.__current_2_data_points)
+        i_3_rms = get_root_mean_square(self.__current_3_data_points)
 
-    def get_current_signals(self):
-        frequency_guess = 50  # Hz
-        amplitude_guess = 15  # A
-        phase_guess = 0  # radians
-        offset_guess = 0  # A
-        initial_guess = [frequency_guess,
-                         amplitude_guess, phase_guess, offset_guess]
+        return v_1_rms, v_2_rms, v_3_rms, i_1_rms, i_2_rms, i_3_rms
 
-        current_1_signal, current_1_covariance = curve_fit(
-            f=self.sine_signal, xdata=self.timestamp_n, ydata=self.current_1_data_points, p0=initial_guess)
-        current_2_signal, current_2_covariance = curve_fit(
-            f=self.sine_signal, xdata=self.timestamp_n, ydata=self.current_2_data_points, p0=initial_guess)
-        current_3_signal, current_3_covariance = curve_fit(
-            f=self.sine_signal, xdata=self.timestamp_n, ydata=self.current_3_data_points, p0=initial_guess)
+    def get_total_apparent_power(self) -> float:
+        v_1_rms, v_2_rms, v_3_rms, \
+            i_1_rms, i_2_rms, i_3_rms = self.get_rms_values()
 
-        return current_1_signal, current_2_signal, current_3_signal
+        apparent_power_1 = v_1_rms * i_1_rms
+        apparent_power_2 = v_2_rms * i_2_rms
+        apparent_power_3 = v_3_rms * i_3_rms
 
-    def get_signal_attributes(self, signal):
-        frequency_fit, amplitude_fit, phase_fit, offset_fit = signal
-        return frequency_fit, amplitude_fit, phase_fit, offset_fit
+        total_apparent_power = apparent_power_1
+        + apparent_power_2 + apparent_power_3
 
-    def get_rms_value(self, data_points: list) -> float | None:
-        if not data_points:
-            return None
+        return total_apparent_power
 
-        squared_measurements = [measurement **
-                                2 for measurement in data_points]
-        mean = sum(squared_measurements) / len(squared_measurements)
-        rms_value = np.sqrt(mean)
-        return rms_value
+    def get_power_factor(self) -> float:
+        active_power = self.get_total_active_power()
+        apparent_power = self.get_total_apparent_power()
+        power_factor = round(active_power / apparent_power, 3)
+        return power_factor
 
+    def get_total_reactive_power(self):
+        squared_total_active_power = np.square(self.get_total_active_power())
+        squared_total_apparent_power = np.square(
+            self.get_total_apparent_power())
 
-class Powers(ModelSignals):
-    def get_active_power(self) -> float:
-        active_power = 0
-        for measurement in self.last_measurements:
-            active_power += measurement.voltage_1 * measurement.current_1
-            active_power += measurement.voltage_2 * measurement.current_2
-            active_power += measurement.voltage_3 * measurement.current_3
-        return active_power
-
-    def get_apparent_power(self, signal):
-        voltage_1_signal, voltage_2_signal, voltage_3_signal = self.get_voltage_signals()
-        current_1_signal, current_2_signal, current_3_signal = self.get_current_signals()
-        signal
-        squared_signal = np.square(signal)
-        mean_squared_signal = np.mean(squared_signal)
-        rms = np.sqrt(mean_squared_signal)
-
-    def get_reactive_power(self):
-        # TODO Q =sqrt(S**2-P**2)
-        pass
-
-    def get_power_factor(self):
-        # TODO PF = P/S
-        pass
+        reactive_power = np.sqrt(
+            squared_total_apparent_power-squared_total_active_power
+        )
+        return reactive_power

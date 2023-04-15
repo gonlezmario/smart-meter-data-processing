@@ -17,8 +17,8 @@ class ModelSignals:
 
         for measurement in last_measurements:
             self.voltage_1_data_points.append(measurement.voltage_1)
-            self.voltage_2_data_points.append(measurement.voltage_1)
-            self.voltage_3_data_points.append(measurement.voltage_1)
+            self.voltage_2_data_points.append(measurement.voltage_2)
+            self.voltage_3_data_points.append(measurement.voltage_3)
             self.current_1_data_points.append(measurement.current_1)
             self.current_2_data_points.append(measurement.current_2)
             self.current_3_data_points.append(measurement.current_3)
@@ -63,13 +63,19 @@ class ModelSignals:
 
         return current_1_signal, current_2_signal, current_3_signal
 
-    @staticmethod
-    def get_signal_attributes(signal):
+    def get_signal_attributes(self, signal):
         frequency_fit, amplitude_fit, phase_fit, offset_fit = signal
         return frequency_fit, amplitude_fit, phase_fit, offset_fit
 
+    def get_rms_value(self, data_points: list) -> float | None:
+        if not data_points:
+            return None
 
-frequency_fit, amplitude_fit, phase_fit, offset_fit = params
+        squared_measurements = [measurement **
+                                2 for measurement in data_points]
+        mean = sum(squared_measurements) / len(squared_measurements)
+        rms_value = np.sqrt(mean)
+        return rms_value
 
 
 class Powers(ModelSignals):
@@ -82,7 +88,8 @@ class Powers(ModelSignals):
         return active_power
 
     def get_apparent_power(self, signal):
-        # TODO S = V_rms*I_rms
+        voltage_1_signal, voltage_2_signal, voltage_3_signal = self.get_voltage_signals()
+        current_1_signal, current_2_signal, current_3_signal = self.get_current_signals()
         signal
         squared_signal = np.square(signal)
         mean_squared_signal = np.mean(squared_signal)

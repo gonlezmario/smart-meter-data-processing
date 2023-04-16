@@ -46,5 +46,54 @@ class DataPlot:
         self.axs[1, 1].set_ylabel('Power Factor')
 
     def update_data(self):
-        plt.ioff()
-        plt.show()
+        timestamp_points = []
+        voltage_1_points = []
+        voltage_2_points = []
+        voltage_3_points = []
+        current_1_points = []
+        current_2_points = []
+        current_3_points = []
+        active_power_points = []
+        reactive_power_points = []
+        apparent_power_points = []
+        power_factor_points = []
+
+        for measurement_point in self.processed_data:
+            timestamp_points.append(measurement_point.timestamp)
+            voltage_1_points.append(measurement_point.voltage_1)
+            voltage_2_points.append(measurement_point.voltage_2)
+            voltage_3_points.append(measurement_point.voltage_3)
+            current_1_points.append(measurement_point.current_1)
+            current_2_points.append(measurement_point.current_2)
+            current_3_points.append(measurement_point.current_3)
+            active_power_points.append(measurement_point.active_power)
+            reactive_power_points.append(measurement_point.reactive_power)
+            apparent_power_points.append(measurement_point.apparent_power)
+            power_factor_points.append(measurement_point.power_factor)
+
+        self.line_voltage_1.set_data(
+            timestamp_points, voltage_1_points)
+        self.line_voltage_2.set_data(
+            timestamp_points, voltage_2_points)
+        self.line_voltage_3.set_data(
+            timestamp_points, voltage_3_points)
+        self.line_current_1.set_data(
+            timestamp_points, current_1_points)
+        self.line_current_2.set_data(
+            timestamp_points, current_2_points)
+        self.line_current_3.set_data(
+            timestamp_points, current_3_points)
+        self.line_active_power.set_data(
+            timestamp_points, active_power_points)
+        self.line_reactive_power.set_data(
+            timestamp_points, reactive_power_points)
+        self.line_apparent_power.set_data(
+            timestamp_points, apparent_power_points)
+        self.line_power_factor.set_data(
+            timestamp_points, power_factor_points)
+
+        # Redraw the plot
+        self.fig.canvas.draw()
+
+        # Pause for a short duration to allow the plot to update
+        plt.pause(0.01)

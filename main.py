@@ -6,7 +6,7 @@ from logging.handlers import RotatingFileHandler
 from lib.compute_powers import ComputePowers
 from lib.models import Measurement
 from lib.mqtt_subscriber import MQTTSubscriber
-from lib.plotting import update_plot
+from lib.plotting import DataPlot
 
 
 class MQTTClientService:
@@ -40,7 +40,8 @@ class MQTTClientService:
             processed_data.append(measurement_point)
 
         logging.info("Plotting final results...")
-        update_plot(processed_data=processed_data)
+        data_plot = DataPlot(processed_data=processed_data)
+        data_plot.update_data()
 
         while not self.stop_main:
             time.sleep(1)

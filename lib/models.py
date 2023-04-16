@@ -4,7 +4,7 @@ import logging
 from sqlalchemy import JSON, Boolean, Column, Integer, create_engine, func
 from sqlalchemy.orm import declarative_base, scoped_session, sessionmaker
 
-from lib.config import DATABASE_URL
+from lib.config import DATABASE_URL, MAX_PLOTTING_POINTS
 
 """
 This module contains the ORM model of the SQL database where measurements are
@@ -70,15 +70,43 @@ class Measurement(Base):
     @classmethod
     def query_latest_measurements(cls) -> list:
         """
-        Query all the measurements from a the latest available timestamp,
-        ordered in a list from oldest to newest.
+        Query all the measurements from the latest available timestamp,
+        ordered in a list from oldest to newest, with measurements with the same timestamp
+        grouped together.
+
+        Equivalent to the following SQL statement:
+        SELECT *
+        FROM measurement
+        WHERE timestamp IN (
+        SELECT DISTINCT timestamp
+        FROM measurement
+        ORDER BY timestamp DESC
+        LIMIT {MAX_PLOTTING_POINTS}
+        )
+        ORDER BY timestamp ASC, id ASC;
         """
         session = cls._session_initialization()
-        max_timestamp = session.query(Measurement.timestamp).order_by(
-            Measurement.timestamp.desc()).limit(1).scalar()
-        measurements = session.query(Measurement).filter_by(
-            timestamp=max_timestamp).order_by(Measurement.id.asc()).all()
-        return measurements
+
+        measurements = session.query(Measurement).order_by(
+            Measurement.timestamp.desc()).limit(MAX_PLOTTING_POINTS).all()
+
+        # Group measurements with the same timestamp together
+        grouped_measurements = []
+        current_timestamp = None
+        current_group = []
+
+        for measurement in measurements:
+            if measurement.timestamp != current_timestamp:
+                if current_group:
+                    grouped_measurements.append(current_group)
+                    current_group = []
+                current_timestamp = measurement.timestamp
+            current_group.append(measurement)
+
+        if current_group:
+            grouped_measurements.append(current_group)
+
+        return grouped_measurements
 
 
 # Create the model table if it does not exist

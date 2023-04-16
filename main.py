@@ -34,6 +34,7 @@ class MQTTClientService:
 
         logging.info("Computing powers...")
         processed_data = []
+
         for measurement in measurements_to_plot:
             logging.info(measurement)
             measurement_point = ComputePowers(measurement=measurement)
@@ -41,7 +42,7 @@ class MQTTClientService:
 
         logging.info("Plotting final results...")
         data_plot = DataPlot(processed_data=processed_data)
-        data_plot.update_data()
+        data_plot.plot_data()
 
         while not self.stop_main:
             time.sleep(1)

@@ -39,7 +39,7 @@ class DataPlot:
         root.title('Data Plot')
 
         # Create a Matplotlib figure
-        fig = plt.figure()
+        fig = plt.figure(figsize=(12, 8))
 
         # Plot voltages
         ax1 = fig.add_subplot(2, 2, 1)

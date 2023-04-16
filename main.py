@@ -2,19 +2,36 @@ import logging
 import time
 from logging.handlers import RotatingFileHandler
 
+from lib.compute_powers import ComputePowers
+from lib.models import Measurement
 from lib.mqtt_subscriber import MQTTSubscriber
+from lib.plotting import update_plot
 
 
 class MQTTClientService:
     def __init__(self) -> None:
         self.stop_main = False
+        self.mqtt_subscriber = MQTTSubscriber(
+            broker_address="localhost", port=1883, topic="smart_meter")
 
     def stop(self) -> None:
         self.stop_main = True
-        mqtt_subscriber.disconnect()
+        self.mqtt_subscriber.disconnect()
 
     def main(self) -> None:
-        logging.info("Connected. Running program...")
+
+        logging.info("Connecting to the MQTT broker...")
+        self.mqtt_subscriber.connect()
+
+        logging.info("Querying last measurements...")
+        measurements = Measurement.query_latest_measurements()
+
+        logging.info("Computing powers...")
+        processed_data = ComputePowers(measurements=measurements)
+
+        logging.info("Plotting results...")
+        update_plot(processed_data=processed_data)
+
         while not self.stop_main:
             time.sleep(1)
 
@@ -34,11 +51,6 @@ if __name__ == "__main__":
     try:
         logging.info("Initializing MQTT Client Service...")
         service = MQTTClientService()
-        logging.info("Trying to connect to the MQTT broker...")
-        mqtt_subscriber = MQTTSubscriber(
-            broker_address="localhost", port=1883, topic="smart_meter")
-        mqtt_subscriber.connect()
-        logging.info("Connected. Running main loop...")
         service.main()
 
     except KeyboardInterrupt:

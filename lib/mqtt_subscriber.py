@@ -54,7 +54,7 @@ class MQTTSubscriber:
         self.client.subscribe(self.topic)
 
         # Start MQTT loop to receive messages
-        self.client.loop_forever()
+        self.client.loop_start()
 
     def disconnect(self):
         # Stop MQTT loop and disconnect from MQTT broker

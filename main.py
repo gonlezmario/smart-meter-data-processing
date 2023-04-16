@@ -16,6 +16,7 @@ class MQTTClientService:
             broker_address="localhost", port=1883, topic="smart_meter")
         self.mqtt_thread = threading.Thread(
             target=self.mqtt_subscriber.connect)
+        self.mqtt_thread_started = False
 
     def stop(self) -> None:
         self.stop_main = True
@@ -26,25 +27,25 @@ class MQTTClientService:
 
     def main(self) -> None:
 
-        logging.info("Connecting to the MQTT broker...")
-        self.mqtt_thread.start()
-
-        logging.info("Querying last measurements...")
-        measurements_to_plot = Measurement.query_latest_measurements()
-
-        logging.info("Computing powers...")
-        processed_data = []
-
-        for measurement in measurements_to_plot:
-            logging.info(measurement)
-            measurement_point = ComputePowers(measurement=measurement)
-            processed_data.append(measurement_point)
-
-        logging.info("Plotting final results...")
-        data_plot = DataPlot(processed_data=processed_data)
-        data_plot.plot_data()
-
         while not self.stop_main:
+            if not self.mqtt_thread_started:
+                logging.info("Starting thread for the MQTT broker...")
+                self.mqtt_thread.start()
+                self.mqtt_thread_started = True
+
+            logging.info("Querying last measurements...")
+            measurements_to_plot = Measurement.query_latest_measurements()
+
+            logging.info("Computing powers...")
+            processed_data = []
+
+            for measurement in measurements_to_plot:
+                measurement_point = ComputePowers(measurement=measurement)
+                processed_data.append(measurement_point)
+
+            logging.info("Plotting results...")
+            data_plot = DataPlot(processed_data=processed_data)
+            data_plot.plot_data()
             time.sleep(1)
 
 

@@ -1,4 +1,5 @@
 
+import logging
 from typing import Type
 
 import numpy as np
@@ -31,30 +32,38 @@ class ComputePowers:
         self.power_factor = self.get_power_factor()
 
     def _get_data_points(self, measurement: list[Type[Measurement]]):
+        try:
+            voltage_1_data_points = [
+                measurement_object.voltage_1 for measurement_object in measurement]
+            voltage_2_data_points = [
+                measurement_object.voltage_2 for measurement_object in measurement]
+            voltage_3_data_points = [
+                measurement_object.voltage_3 for measurement_object in measurement]
+            current_1_data_points = [
+                measurement_object.current_1 for measurement_object in measurement]
+            current_2_data_points = [
+                measurement_object.current_2 for measurement_object in measurement]
+            current_3_data_points = [
+                measurement_object.current_3 for measurement_object in measurement]
 
-        voltage_1_data_points = [
-            measurement_object.voltage_1 for measurement_object in measurement]
-        voltage_2_data_points = [
-            measurement_object.voltage_2 for measurement_object in measurement]
-        voltage_3_data_points = [
-            measurement_object.voltage_3 for measurement_object in measurement]
-        current_1_data_points = [
-            measurement_object.current_1 for measurement_object in measurement]
-        current_2_data_points = [
-            measurement_object.current_2 for measurement_object in measurement]
-        current_3_data_points = [
-            measurement_object.current_3 for measurement_object in measurement]
+            return voltage_1_data_points, voltage_2_data_points, \
+                voltage_3_data_points, current_1_data_points, \
+                current_2_data_points, current_3_data_points
 
-        return voltage_1_data_points, voltage_2_data_points, \
-            voltage_3_data_points, current_1_data_points, \
-            current_2_data_points, current_3_data_points
+        except Exception as e:
+            logging.error(
+                "Unhandled error while computing RMS values: %s" % e)
 
     def get_total_active_power(self) -> float:
-        active_power_1 = self.voltage_1 * self.current_1
-        active_power_2 = self.voltage_2 * self.current_2
-        active_power_3 = self.voltage_3 * self.current_3
-        total_active_power = active_power_1 + active_power_2 + active_power_3
-        return total_active_power
+        try:
+            active_power_1 = self.voltage_1 * self.current_1
+            active_power_2 = self.voltage_2 * self.current_2
+            active_power_3 = self.voltage_3 * self.current_3
+            total_active_power = active_power_1 + active_power_2 + active_power_3
+            return total_active_power
+        except Exception as e:
+            logging.error(
+                "Unhandled error while computing active power: %s" % e)
 
     def get_rms_values(self) -> tuple[
             float, float, float, float, float, float,
@@ -66,35 +75,58 @@ class ComputePowers:
             rms_value = np.sqrt(mean)
             return rms_value
 
-        voltage_1_rms = get_root_mean_square(self.voltage_1)
-        voltage_2_rms = get_root_mean_square(self.voltage_2)
-        voltage_3_rms = get_root_mean_square(self.voltage_3)
-        current_1_rms = get_root_mean_square(self.current_1)
-        current_2_rms = get_root_mean_square(self.current_2)
-        current_3_rms = get_root_mean_square(self.current_3)
+        try:
+            voltage_1_rms = get_root_mean_square(self.voltage_1)
+            voltage_2_rms = get_root_mean_square(self.voltage_2)
+            voltage_3_rms = get_root_mean_square(self.voltage_3)
+            current_1_rms = get_root_mean_square(self.current_1)
+            current_2_rms = get_root_mean_square(self.current_2)
+            current_3_rms = get_root_mean_square(self.current_3)
 
-        return voltage_1_rms, voltage_2_rms, voltage_3_rms, current_1_rms, current_2_rms, current_3_rms
+            return voltage_1_rms, voltage_2_rms, voltage_3_rms, \
+                current_1_rms, current_2_rms, current_3_rms
+
+        except Exception as e:
+            logging.error(
+                "Unhandled error while computing RMS values: %s" % e)
 
     def get_total_apparent_power(self) -> float:
-        voltage_1_rms, voltage_2_rms, voltage_3_rms, current_1_rms, current_2_rms, current_3_rms = self.get_rms_values()
+        try:
+            voltage_1_rms, voltage_2_rms, voltage_3_rms, current_1_rms, \
+                current_2_rms, current_3_rms = self.get_rms_values()
 
-        total_apparent_power = voltage_1_rms * current_1_rms + \
-            voltage_2_rms * current_2_rms + voltage_3_rms * current_3_rms
+            total_apparent_power = voltage_1_rms * current_1_rms + \
+                voltage_2_rms * current_2_rms + voltage_3_rms * current_3_rms
 
-        return total_apparent_power
+            return total_apparent_power
+
+        except Exception as e:
+            logging.error(
+                "Unhandled error while computing apparent power: %s" % e)
 
     def get_power_factor(self) -> float:
-        active_power = self.get_total_active_power()
-        apparent_power = self.get_total_apparent_power()
-        power_factor = round(active_power / apparent_power, 3)
-        return power_factor
+        try:
+            active_power = self.get_total_active_power()
+            apparent_power = self.get_total_apparent_power()
+            power_factor = active_power / apparent_power
+
+            return power_factor
+
+        except Exception as e:
+            logging.error(
+                "Unhandled error while computing power factor: %s" % e)
 
     def get_total_reactive_power(self):
-        squared_total_active_power = np.square(self.get_total_active_power())
-        squared_total_apparent_power = np.square(
-            self.get_total_apparent_power())
+        try:
+            squared_total_active_power = np.square(
+                self.get_total_active_power())
+            squared_total_apparent_power = np.square(
+                self.get_total_apparent_power())
 
-        reactive_power = np.sqrt(
-            squared_total_apparent_power-squared_total_active_power
-        )
-        return reactive_power
+            reactive_power = np.sqrt(
+                squared_total_apparent_power-squared_total_active_power
+            )
+            return reactive_power
+        except Exception as e:
+            logging.error(
+                "Unhandled error while computing reactive power: %s" % e)

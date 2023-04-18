@@ -1,4 +1,7 @@
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
+plt.ion()
 
 
 class DataPlot:
@@ -33,54 +36,100 @@ class DataPlot:
                 for measurement_point in self.processed_data]
             )
 
-    def plot_data(self):
-        plt.ion()  # Turn on interactive mode
+        self.fig = plt.figure(figsize=(24, 16))
+        self.ax1 = plt.subplot(2, 2, 1)
+        self.ax2 = plt.subplot(2, 2, 2)
+        self.ax3 = plt.subplot(2, 2, 3)
+        self.ax4 = plt.subplot(2, 2, 4)
 
-        plt.figure(figsize=(24, 16))
+        self.lines = []
+        self.lines.append(self.ax1.plot(self.timestamp_points,
+                          self.voltage_1_points, label='Voltage 1')[0])
+        self.lines.append(self.ax1.plot(self.timestamp_points,
+                          self.voltage_2_points, label='Voltage 2')[0])
+        self.lines.append(self.ax1.plot(self.timestamp_points,
+                          self.voltage_3_points, label='Voltage 3')[0])
+        self.ax1.set_xlabel('Timestamp')
+        self.ax1.set_ylabel('Voltage [V]')
+        self.ax1.legend()
+
+        self.lines.append(self.ax2.plot(self.timestamp_points,
+                          self.current_1_points, label='Current 1')[0])
+        self.lines.append(self.ax2.plot(self.timestamp_points,
+                          self.current_2_points, label='Current 2')[0])
+        self.lines.append(self.ax2.plot(self.timestamp_points,
+                          self.current_3_points, label='Current 3')[0])
+        self.ax2.set_xlabel('Timestamp')
+        self.ax2.set_ylabel('Current [A]')
+        self.ax2.legend()
+
+        self.lines.append(self.ax3.plot(self.timestamp_points,
+                          self.active_power_points, label='Active Power')[0])
+        self.lines.append(self.ax3.plot(self.timestamp_points,
+                          self.reactive_power_points, label='Reactive Power')[0])
+        self.lines.append(self.ax3.plot(self.timestamp_points,
+                          self.apparent_power_points, label='Apparent Power')[0])
+        self.ax3.set_xlabel('Timestamp')
+        self.ax3.set_ylabel('Power [W, var, VA]')
+        self.ax3.legend()
+
+        self.lines.append(self.ax4.plot(self.timestamp_points,
+                          self.power_factor_points, label='Power Factor')[0])
+        self.ax4.set_xlabel('Timestamp')
+        self.ax4.set_ylabel('Power Factor []')
+        self.ax4.legend()
+
+    def update_plot(self, frame):
+        # Clear the axes
+        self.ax1.clear()
+        self.ax2.clear()
+        self.ax3.clear()
+        self.ax4.clear()
 
         # Plot voltages
-        plt.subplot(2, 2, 1)
-        plt.plot(self.timestamp_points,
-                 self.voltage_1_points, label='Voltage 1')
-        plt.plot(self.timestamp_points,
-                 self.voltage_2_points, label='Voltage 2')
-        plt.plot(self.timestamp_points,
-                 self.voltage_3_points, label='Voltage 3')
-        plt.xlabel('Timestamp')
-        plt.ylabel('Voltage [V]')
-        plt.legend()
+        self.ax1.plot(self.timestamp_points,
+                      self.voltage_1_points, label='Voltage 1')
+        self.ax1.plot(self.timestamp_points,
+                      self.voltage_2_points, label='Voltage 2')
+        self.ax1.plot(self.timestamp_points,
+                      self.voltage_3_points, label='Voltage 3')
+        self.ax1.set_xlabel('Timestamp')
+        self.ax1.set_ylabel('Voltage [V]')
+        self.ax1.legend()
 
         # Plot currents
-        plt.subplot(2, 2, 2)
-        plt.plot(self.timestamp_points,
-                 self.current_1_points, label='Current 1')
-        plt.plot(self.timestamp_points,
-                 self.current_2_points, label='Current 2')
-        plt.plot(self.timestamp_points,
-                 self.current_3_points, label='Current 3')
-        plt.xlabel('Timestamp')
-        plt.ylabel('Current [A]')
-        plt.legend()
+        self.ax2.plot(self.timestamp_points,
+                      self.current_1_points, label='Current 1')
+        self.ax2.plot(self.timestamp_points,
+                      self.current_2_points, label='Current 2')
+        self.ax2.plot(self.timestamp_points,
+                      self.current_3_points, label='Current 3')
+        self.ax2.set_xlabel('Timestamp')
+        self.ax2.set_ylabel('Current [A]')
+        self.ax2.legend()
 
         # Plot powers
-        plt.subplot(2, 2, 3)
-        plt.plot(self.timestamp_points,
-                 self.active_power_points, label='Active Power')
-        plt.plot(self.timestamp_points, self.reactive_power_points,
-                 label='Reactive Power')
-        plt.plot(self.timestamp_points, self.apparent_power_points,
-                 label='Apparent Power')
-        plt.xlabel('Timestamp')
-        plt.ylabel('Power [W, var, VA]')
-        plt.legend()
+        self.ax3.plot(self.timestamp_points,
+                      self.active_power_points, label='Active Power')
+        self.ax3.plot(self.timestamp_points,
+                      self.reactive_power_points, label='Reactive Power')
+        self.ax3.plot(self.timestamp_points,
+                      self.apparent_power_points, label='Apparent Power')
+        self.ax3.set_xlabel('Timestamp')
+        self.ax3.set_ylabel('Power [W, var, VA]')
+        self.ax3.legend()
 
         # Plot power factor
-        plt.subplot(2, 2, 4)
-        plt.plot(self.timestamp_points,
-                 self.power_factor_points, label='Power Factor')
-        plt.xlabel('Timestamp')
-        plt.ylabel('Power Factor []')
-        plt.legend()
+        self.ax4.plot(self.timestamp_points,
+                      self.power_factor_points, label='Power Factor')
+        self.ax4.set_xlabel('Timestamp')
+        self.ax4.set_ylabel('Power Factor []')
+        self.ax4.legend()
 
-        plt.clf()
-        plt.pause(0.1)  # Pause to allow interaction with the plot
+        plt.tight_layout()
+
+    def animate(self):
+        # Create FuncAnimation to update the plot
+        ani = FuncAnimation(self.fig, self.update_plot, frames=len(
+            self.processed_data), interval=1000)
+        plt.show()

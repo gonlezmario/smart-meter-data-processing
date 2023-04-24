@@ -3,10 +3,12 @@ import threading
 import time
 from logging.handlers import RotatingFileHandler
 
-from lib.compute_powers import ComputePowers
+import matplotlib.pyplot as plt
+
+from lib.compute_powers import ProcessedMeasurement
 from lib.models import Measurement
 from lib.mqtt_subscriber import MQTTSubscriber
-from lib.plotting import DataPlot
+from lib.plotting import MeasurementGraph
 
 
 class MQTTClientService:
@@ -17,6 +19,9 @@ class MQTTClientService:
         self.mqtt_thread = threading.Thread(
             target=self.mqtt_subscriber.connect)
         self.mqtt_thread_started = False
+        self.measurement_graph = MeasurementGraph()
+        self.anim = self.measurement_graph.anim
+        plt.show()
 
     def stop(self) -> None:
         self.stop_main = True
@@ -28,24 +33,33 @@ class MQTTClientService:
     def main(self) -> None:
 
         while not self.stop_main:
+
             if not self.mqtt_thread_started:
                 logging.info("Starting thread for the MQTT broker...")
                 self.mqtt_thread.start()
                 self.mqtt_thread_started = True
 
             logging.info("Querying last measurements...")
-            measurements_to_plot = Measurement.query_latest_measurements()
+            latest_measurements = Measurement.query_latest_measurements()
 
             logging.info("Computing powers...")
-            processed_data = []
+            measurement_point = ProcessedMeasurement(
+                measurements=latest_measurements)
 
-            for measurement in measurements_to_plot:
-                measurement_point = ComputePowers(measurement=measurement)
-                processed_data.append(measurement_point)
-
+            print(measurement_point.timestamp,
+                  measurement_point.current_1,
+                  measurement_point.current_2,
+                  measurement_point.current_3,
+                  measurement_point.voltage_1,
+                  measurement_point.voltage_2,
+                  measurement_point.voltage_3,
+                  measurement_point.active_power,
+                  measurement_point.reactive_power,
+                  measurement_point.apparent_power,
+                  measurement_point.power_factor)
             logging.info("Plotting results...")
-            data_plot = DataPlot(processed_data=processed_data)
-            data_plot.plot_data()
+            # self.measurement_graph.update_graph(
+            #     measurement_point=measurement_point)
             time.sleep(1)
 
 

@@ -1,135 +1,94 @@
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-plt.ion()
 
+class MeasurementGraph:
+    def __init__(self):
+        self.fig, self.axs = plt.subplots(nrows=2, ncols=2, figsize=(15, 12))
 
-class DataPlot:
-    def __init__(self, processed_data):
-        self.processed_data = processed_data
+        # Create the current subgraph
+        self.current_ax = self.axs[0, 0]
+        self.current_ax.set_xlabel('Timestamp')
+        self.current_ax.set_ylabel('Current (A)')
+        self.current_line_1, = self.current_ax.plot([], [], label='Current 1')
+        self.current_line_2, = self.current_ax.plot([], [], label='Current 2')
+        self.current_line_3, = self.current_ax.plot([], [], label='Current 3')
+        self.current_ax.legend()
 
-        self.timestamp_points, \
-            self.voltage_1_points, \
-            self.voltage_2_points, \
-            self.voltage_3_points, \
-            self.current_1_points, \
-            self.current_2_points, \
-            self.current_3_points, \
-            self.active_power_points, \
-            self.reactive_power_points, \
-            self.apparent_power_points, \
-            self.power_factor_points \
-            = zip(*[
-                (
-                    measurement_point.timestamp,
-                    measurement_point.voltage_1,
-                    measurement_point.voltage_2,
-                    measurement_point.voltage_3,
-                    measurement_point.current_1,
-                    measurement_point.current_2,
-                    measurement_point.current_3,
-                    measurement_point.active_power,
-                    measurement_point.reactive_power,
-                    measurement_point.apparent_power,
-                    measurement_point.power_factor
-                )
-                for measurement_point in self.processed_data]
-            )
+        # Create the voltage subgraph
+        self.voltage_ax = self.axs[0, 1]
+        self.voltage_ax.set_xlabel('Timestamp')
+        self.voltage_ax.set_ylabel('Voltage (V)')
+        self.voltage_line_1, = self.voltage_ax.plot([], [], label='Voltage 1')
+        self.voltage_line_2, = self.voltage_ax.plot([], [], label='Voltage 2')
+        self.voltage_line_3, = self.voltage_ax.plot([], [], label='Voltage 3')
+        self.voltage_ax.legend()
 
-        self.fig = plt.figure(figsize=(24, 16))
-        self.ax1 = plt.subplot(2, 2, 1)
-        self.ax2 = plt.subplot(2, 2, 2)
-        self.ax3 = plt.subplot(2, 2, 3)
-        self.ax4 = plt.subplot(2, 2, 4)
+        # Create the power subgraph
+        self.power_ax = self.axs[1, 0]
+        self.power_ax.set_xlabel('Timestamp')
+        self.power_ax.set_ylabel('Power [W]')
+        self.active_power_line, = self.power_ax.plot(
+            [], [], label='Active Power')
+        self.reactive_power_line, = self.power_ax.plot(
+            [], [], label='Reactive Power')
+        self.apparent_power_line, = self.power_ax.plot(
+            [], [], label='Apparent Power')
+        self.power_ax.legend()
 
-        self.lines = []
-        self.lines.append(self.ax1.plot(self.timestamp_points,
-                          self.voltage_1_points, label='Voltage 1')[0])
-        self.lines.append(self.ax1.plot(self.timestamp_points,
-                          self.voltage_2_points, label='Voltage 2')[0])
-        self.lines.append(self.ax1.plot(self.timestamp_points,
-                          self.voltage_3_points, label='Voltage 3')[0])
-        self.ax1.set_xlabel('Timestamp')
-        self.ax1.set_ylabel('Voltage [V]')
-        self.ax1.legend()
+        # Create the power factor subgraph
+        self.power_factor_ax = self.axs[1, 1]
+        self.power_factor_ax.set_xlabel('Timestamp')
+        self.power_factor_ax.set_ylabel('Power Factor [-]')
+        self.power_factor_line, = self.power_factor_ax.plot(
+            [], [], label='Power Factor')
+        self.power_factor_ax.legend()
 
-        self.lines.append(self.ax2.plot(self.timestamp_points,
-                          self.current_1_points, label='Current 1')[0])
-        self.lines.append(self.ax2.plot(self.timestamp_points,
-                          self.current_2_points, label='Current 2')[0])
-        self.lines.append(self.ax2.plot(self.timestamp_points,
-                          self.current_3_points, label='Current 3')[0])
-        self.ax2.set_xlabel('Timestamp')
-        self.ax2.set_ylabel('Current [A]')
-        self.ax2.legend()
+        # Set up the FuncAnimation
+        self.anim = FuncAnimation(self.fig, self.update_graph, frames=None,
+                                  interval=100, save_count=500, cache_frame_data=False)
 
-        self.lines.append(self.ax3.plot(self.timestamp_points,
-                          self.active_power_points, label='Active Power')[0])
-        self.lines.append(self.ax3.plot(self.timestamp_points,
-                          self.reactive_power_points, label='Reactive Power')[0])
-        self.lines.append(self.ax3.plot(self.timestamp_points,
-                          self.apparent_power_points, label='Apparent Power')[0])
-        self.ax3.set_xlabel('Timestamp')
-        self.ax3.set_ylabel('Power [W, var, VA]')
-        self.ax3.legend()
+    def update_graph(self, measurement_point):
+        timestamp = measurement_point.timestamp
+        current_1 = measurement_point.current_1
+        current_2 = measurement_point.current_2
+        current_3 = measurement_point.current_3
+        voltage_1 = measurement_point.voltage_1
+        voltage_2 = measurement_point.voltage_2
+        voltage_3 = measurement_point.voltage_3
+        active_power = measurement_point.active_power
+        reactive_power = measurement_point.reactive_power
+        apparent_power = measurement_point.apparent_power
+        power_factor = measurement_point.power_factor
 
-        self.lines.append(self.ax4.plot(self.timestamp_points,
-                          self.power_factor_points, label='Power Factor')[0])
-        self.ax4.set_xlabel('Timestamp')
-        self.ax4.set_ylabel('Power Factor []')
-        self.ax4.legend()
+        # Update the current subgraph
+        self.current_line_1.set_data(timestamp, current_1)
+        self.current_line_2.set_data(timestamp, current_2)
+        self.current_line_3.set_data(timestamp, current_3)
+        self.current_ax.relim()
+        self.current_ax.autoscale_view()
 
-    def update_plot(self, frame):
-        # Clear the axes
-        self.ax1.clear()
-        self.ax2.clear()
-        self.ax3.clear()
-        self.ax4.clear()
+        # Update the voltage subgraph
+        self.voltage_line_1.set_data(timestamp, voltage_1)
+        self.voltage_line_2.set_data(timestamp, voltage_2)
+        self.voltage_line_3.set_data(timestamp, voltage_3)
+        self.voltage_ax.relim()
+        self.voltage_ax.autoscale_view()
 
-        # Plot voltages
-        self.ax1.plot(self.timestamp_points,
-                      self.voltage_1_points, label='Voltage 1')
-        self.ax1.plot(self.timestamp_points,
-                      self.voltage_2_points, label='Voltage 2')
-        self.ax1.plot(self.timestamp_points,
-                      self.voltage_3_points, label='Voltage 3')
-        self.ax1.set_xlabel('Timestamp')
-        self.ax1.set_ylabel('Voltage [V]')
-        self.ax1.legend()
+        # Update the power subgraph
+        self.active_power_line.set_data(timestamp, active_power)
+        self.reactive_power_line.set_data(timestamp, reactive_power)
+        self.apparent_power_line.set_data(timestamp, apparent_power)
+        self.power_ax.relim()
+        self.power_ax.autoscale_view()
 
-        # Plot currents
-        self.ax2.plot(self.timestamp_points,
-                      self.current_1_points, label='Current 1')
-        self.ax2.plot(self.timestamp_points,
-                      self.current_2_points, label='Current 2')
-        self.ax2.plot(self.timestamp_points,
-                      self.current_3_points, label='Current 3')
-        self.ax2.set_xlabel('Timestamp')
-        self.ax2.set_ylabel('Current [A]')
-        self.ax2.legend()
+        # Update the power factor subgraph
+        self.power_factor_line.set_data(timestamp, power_factor)
+        self.power_factor_ax.relim()
+        self.power_factor_ax.autoscale_view()
 
-        # Plot powers
-        self.ax3.plot(self.timestamp_points,
-                      self.active_power_points, label='Active Power')
-        self.ax3.plot(self.timestamp_points,
-                      self.reactive_power_points, label='Reactive Power')
-        self.ax3.plot(self.timestamp_points,
-                      self.apparent_power_points, label='Apparent Power')
-        self.ax3.set_xlabel('Timestamp')
-        self.ax3.set_ylabel('Power [W, var, VA]')
-        self.ax3.legend()
-
-        # Plot power factor
-        self.ax4.plot(self.timestamp_points,
-                      self.power_factor_points, label='Power Factor')
-        self.ax4.set_xlabel('Timestamp')
-        self.ax4.set_ylabel('Power Factor []')
-        self.ax4.legend()
-
-        plt.tight_layout()
-
-    def animate(self):
-        # Create FuncAnimation to update the plot
-        ani = FuncAnimation(self.fig, self.update_plot, frames=len(
-            self.processed_data), interval=1000)
-        plt.show()
+        # Return all of the lines that were updated
+        return [self.current_line_1, self.current_line_2, self.current_line_3,
+                self.voltage_line_1, self.voltage_line_2, self.voltage_line_3,
+                self.active_power_line, self.reactive_power_line, self.apparent_power_line,
+                self.power_factor_line]

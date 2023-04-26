@@ -6,9 +6,9 @@ from logging.handlers import RotatingFileHandler
 import matplotlib.pyplot as plt
 
 from lib.compute_powers import ProcessedMeasurement
+from lib.measurements_cache import queue_measurement
 from lib.models import Measurement
 from lib.mqtt_subscriber import MQTTSubscriber
-from lib.plotting import MeasurementGraph
 
 
 class MQTTClientService:
@@ -19,9 +19,6 @@ class MQTTClientService:
         self.mqtt_thread = threading.Thread(
             target=self.mqtt_subscriber.connect)
         self.mqtt_thread_started = False
-        self.measurement_graph = MeasurementGraph()
-        self.anim = self.measurement_graph.anim
-        plt.show()
 
     def stop(self) -> None:
         self.stop_main = True
@@ -46,20 +43,9 @@ class MQTTClientService:
             measurement_point = ProcessedMeasurement(
                 measurements=latest_measurements)
 
-            print(measurement_point.timestamp,
-                  measurement_point.current_1,
-                  measurement_point.current_2,
-                  measurement_point.current_3,
-                  measurement_point.voltage_1,
-                  measurement_point.voltage_2,
-                  measurement_point.voltage_3,
-                  measurement_point.active_power,
-                  measurement_point.reactive_power,
-                  measurement_point.apparent_power,
-                  measurement_point.power_factor)
+            plot_points = queue_measurement(measurement_point)
+
             logging.info("Plotting results...")
-            # self.measurement_graph.update_graph(
-            #     measurement_point=measurement_point)
             time.sleep(1)
 
 

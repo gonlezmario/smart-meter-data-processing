@@ -1,6 +1,5 @@
-
 import logging
-from typing import Type
+from typing import List
 
 import numpy as np
 
@@ -8,119 +7,169 @@ from lib.models import Measurement
 
 
 class ProcessedMeasurement:
-    def __init__(
-            self,
-            measurements: Type[Measurement]
-    ) -> None:
+    def __init__(self, measurements: List[Measurement]) -> None:
         """
-        Class calculating the correspondent powers in the initialization
-        already. All the methods are use the standard python protected
-        notation instead of private in case it is extended in the
-        future.
+        Class calculating the correspondent powers given a list
+        containing fetched measurements from the database.
 
-        Note there are also protected object attributes, since some
-        parameters use the RMS value instead, which requires to access
-        all the data points instead of their arithmetic mean. However, the timestamp should be constant through all
-        the measurements since that is how the SQL is defined.
+        The timestamp should be constant through all the measurements
+        objects since the SQL query fetches all the measurements with
+        the maximum timestamp.
         """
         try:
             self.timestamp = measurements[0].timestamp
 
-            _voltage_1 = []
-            _voltage_2 = []
-            _voltage_3 = []
-            _current_1 = []
-            _current_2 = []
-            _current_3 = []
+            self.voltage_1_data_points = []
+            self.voltage_2_data_points = []
+            self.voltage_3_data_points = []
+            self.current_1_data_points = []
+            self.current_2_data_points = []
+            self.current_3_data_points = []
 
             for measurement in measurements:
-                _voltage_1.append(measurement.voltage_1)
-                _voltage_2.append(measurement.voltage_2)
-                _voltage_3.append(measurement.voltage_3)
-                _current_1.append(measurement.current_1)
-                _current_2.append(measurement.current_2)
-                _current_3.append(measurement.current_3)
+                self.voltage_1_data_points.append(measurement.voltage_1)
+                self.voltage_2_data_points.append(measurement.voltage_2)
+                self.voltage_3_data_points.append(measurement.voltage_3)
+                self.current_1_data_points.append(measurement.current_1)
+                self.current_2_data_points.append(measurement.current_2)
+                self.current_3_data_points.append(measurement.current_3)
 
-            self.voltage_1 = np.mean(_voltage_1)
-            self.voltage_2 = np.mean(_voltage_2)
-            self.voltage_3 = np.mean(_voltage_3)
-            self.current_1 = np.mean(_current_1)
-            self.current_2 = np.mean(_current_2)
-            self.current_3 = np.mean(_current_3)
+        except TypeError:
+            logging.error(
+                "Could not initialize ProcessedMeasurements. \
+                    Non-iterable object"
+            )
 
-            self.active_power = 100
-            self.reactive_power = 200
-            self.apparent_power = 300
-            self.power_factor = 0.95
+        except AttributeError:
+            logging.error(
+                "Could not initialize ProcessedMeasurements. \
+                    Object with unexpected attributes"
+            )
 
-        except Exception as e:
-            logging.error("Could not initialize ProcessedMeasurements: %s" % e)
+        except IndexError:
+            logging.error(
+                "Could not initialize ProcessedMeasurements. \
+                          Empty list"
+            )
+
+    def get_mean_voltage_1(self) -> float:
+        return np.mean(self.voltage_1_data_points)
+
+    def get_mean_voltage_2(self) -> float:
+        return np.mean(self.voltage_2_data_points)
+
+    def get_mean_voltage_3(self) -> float:
+        return np.mean(self.voltage_3_data_points)
+
+    def get_mean_current_1(self) -> float:
+        return np.mean(self.current_1_data_points)
+
+    def get_mean_current_2(self) -> float:
+        return np.mean(self.current_2_data_points)
+
+    def get_mean_current_3(self) -> float:
+        return np.mean(self.current_3_data_points)
 
     def get_total_active_power(self) -> float:
         """
-        Getter using the already computed mean values instead of the more
-        computationally expensive scalar product of arrays (protected attrs)
+        Getter computing the scalar product of each phase's voltage and
+        current vectors since:
+
+        P = sum(V_n * I_n)
         """
-        try:
-            active_power_1 = self.voltage_1 * self.current_1
-            active_power_2 = self.voltage_2 * self.current_2
-            active_power_3 = self.voltage_3 * self.current_3
-            total_active_power = active_power_1 + active_power_2 + active_power_3
-            return total_active_power
-        except Exception as e:
-            logging.error(
-                "Unhandled error while computing active power: %s" % e)
+        active_power_1 = np.dot(self.current_1_data_points, self.voltage_1_data_points)
+        active_power_2 = np.dot(self.current_2_data_points, self.voltage_2_data_points)
+        active_power_3 = np.dot(self.current_3_data_points, self.voltage_3_data_points)
+
+        total_active_power = active_power_1 + active_power_2 + active_power_3
+
+        return total_active_power
 
     def get_total_apparent_power(self) -> float:
-        try:
-            def get_root_mean_square(data_points: list) -> float:
-                squared_measurements = np.square(data_points)
-                mean = np.mean(squared_measurements)
-                rms_value = np.sqrt(mean)
-                return rms_value
+        """
+        Getter computing the RMS value of all data points since:
 
-            voltage_1_rms = get_root_mean_square(self._voltage_1)
-            voltage_2_rms = get_root_mean_square(self._voltage_2)
-            voltage_3_rms = get_root_mean_square(self._voltage_3)
-            current_1_rms = get_root_mean_square(self._current_1)
-            current_2_rms = get_root_mean_square(self._current_2)
-            current_3_rms = get_root_mean_square(self._current_3)
+        S = U_rms * I_rms
 
-            total_apparent_power = voltage_1_rms * current_1_rms
-            + voltage_2_rms * current_2_rms
-            + voltage_3_rms * current_3_rms
+        And then add phase apparent powers to obtain the total
+        apparent power.
+        """
 
-            return total_apparent_power
+        def get_root_mean_square(data_points: list) -> float:
+            squared_measurements = np.square(data_points)
+            mean = np.mean(squared_measurements)
+            rms_value = np.sqrt(mean)
+            return rms_value
 
-        except Exception as e:
-            logging.error(
-                "Unhandled error while computing apparent power: %s" % e)
+        voltage_1_rms = get_root_mean_square(self.voltage_1_data_points)
+        voltage_2_rms = get_root_mean_square(self.voltage_2_data_points)
+        voltage_3_rms = get_root_mean_square(self.voltage_3_data_points)
+
+        current_1_rms = get_root_mean_square(self.current_1_data_points)
+        current_2_rms = get_root_mean_square(self.current_2_data_points)
+        current_3_rms = get_root_mean_square(self.current_3_data_points)
+
+        total_apparent_power = voltage_1_rms * current_1_rms
+        +voltage_2_rms * current_2_rms
+        +voltage_3_rms * current_3_rms
+
+        return total_apparent_power
+
+    def get_total_reactive_power(self) -> float:
+        """
+        Q = sqrt((S + P) * (S - P))
+        """
+        total_active_power = self.get_total_active_power()
+        total_apparent_power = self.get_total_apparent_power()
+
+        total_reactive_power = np.sqrt(
+            (total_apparent_power + total_active_power)
+            * (total_apparent_power - total_active_power)
+        )
+
+        return total_reactive_power
 
     def get_power_factor(self) -> float:
-        try:
-            active_power = self.get_total_active_power()
-            apparent_power = self.get_total_apparent_power()
-            power_factor = active_power / apparent_power
+        """
+        PF = P/S
+        """
+        active_power = self.get_total_active_power()
+        apparent_power = self.get_total_apparent_power()
+        power_factor = active_power / apparent_power
 
-            return power_factor
+        return power_factor
+
+    def get_all_measurement_attributes(self) -> dict:
+        """
+        Getter of all computer variables inside this class. Returning
+        a dictionary to increase readability from the main module.
+
+        Includes:
+
+        "voltage_1": float
+        "voltage_2": float
+        "voltage_3": float
+        "current_1": float
+        "current_2": float
+        "current_3": float
+        "active_power": float
+        "apparent_power": float
+        "reactive_power": float
+        "power_factor": float
+        """
+        try:
+            return {
+                "voltage_1": self.get_mean_voltage_1(),
+                "voltage_2": self.get_mean_voltage_2(),
+                "voltage_3": self.get_mean_voltage_3(),
+                "current_1": self.get_mean_current_1(),
+                "current_2": self.get_mean_current_2(),
+                "current_3": self.get_mean_current_3(),
+                "active_power": self.get_total_active_power(),
+                "apparent_power": self.get_total_apparent_power(),
+                "reactive_power": self.get_total_reactive_power(),
+                "power_factor": self.get_power_factor(),
+            }
 
         except Exception as e:
-            logging.error(
-                "Unhandled error while computing power factor: %s" % e)
-
-    def get_total_reactive_power(self):
-        """
-        S = sqrt(P**2 + Q**2)
-        """
-        try:
-            squared_total_active_power = np.square(
-                self.get_total_active_power())
-            squared_total_apparent_power = np.square(
-                self.get_total_apparent_power())
-
-            reactive_power = np.sqrt(
-                squared_total_apparent_power-squared_total_active_power)
-            return reactive_power
-        except Exception as e:
-            logging.error(
-                "Unhandled error while computing reactive power: %s" % e)
+            logging.error("Uncaught exception : %s" % e)

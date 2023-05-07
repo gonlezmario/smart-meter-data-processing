@@ -16,7 +16,7 @@ Base = declarative_base()
 
 
 class Measurement(Base):
-    __tablename__ = 'measurements'
+    __tablename__ = "measurements"
 
     id = Column(Integer, primary_key=True)
     timestamp = Column(Integer)
@@ -31,11 +31,10 @@ class Measurement(Base):
     def _session_initialization() -> sessionmaker:
         """
         Method called from other Class methods to follow DRY principles and
-        improve sustainability.
+        improve maintainability.
 
         Scoped session to make sure a unique object is handled per thread and
         the session is automatically closed whenever it is no longer used
-
         """
         engine = create_engine(DATABASE_URL)
         Session = scoped_session(sessionmaker(bind=engine))
@@ -43,7 +42,9 @@ class Measurement(Base):
         return session
 
     @classmethod
-    def create_measurement(cls, timestamp, voltage_1, voltage_2, voltage_3, current_1, current_2, current_3) -> bool:
+    def create_measurement(
+        cls, timestamp, voltage_1, voltage_2, voltage_3, current_1, current_2, current_3
+    ) -> bool:
         """
         Initializes a session, creates a class instance with the given parameters and commits them
         to the database.
@@ -64,7 +65,8 @@ class Measurement(Base):
             return True
         except Exception as e:
             logging.error(
-                "Unhandled error creating a measurement row in the database: %s" % e)
+                "Unhandled error creating a measurement row in the database: %s" % e
+            )
             return False
 
     @classmethod
@@ -87,12 +89,19 @@ class Measurement(Base):
         session = cls._session_initialization()
 
         # Group measurements with the same timestamp together
-        latest_timestamp = session.query(Measurement.timestamp.distinct()).order_by(
-            Measurement.timestamp.desc()).limit(1).scalar()
+        latest_timestamp_db = (
+            session.query(Measurement.timestamp.distinct())
+            .order_by(Measurement.timestamp.desc())
+            .limit(1)
+            .scalar()
+        )
 
-        measurements = session.query(Measurement).filter(
-            Measurement.timestamp == latest_timestamp).all()
-        return measurements
+        grouped_measurements = (
+            session.query(Measurement)
+            .filter(Measurement.timestamp == latest_timestamp_db)
+            .all()
+        )
+        return grouped_measurements
 
 
 # Create the model table if it does not exist

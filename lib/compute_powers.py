@@ -159,6 +159,7 @@ class ProcessedMeasurement:
         """
         try:
             return {
+                "timestamp": self.timestamp,
                 "voltage_1": self.get_mean_voltage_1(),
                 "voltage_2": self.get_mean_voltage_2(),
                 "voltage_3": self.get_mean_voltage_3(),

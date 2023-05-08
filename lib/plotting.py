@@ -26,24 +26,35 @@ class Plotter:
         Both consider only the active power since that is what is usually
         billed, the reactive power and power factor are however displayed to
         monitor reactance.
-
         """
+        plt.ion()
 
         # Create a 2x2 grid for subplots
         self.fig, self.axs = plt.subplots(2, 2, figsize=(16, 12))
 
-        # Initialize lines on each subplot
         self.timestamp_points = []
-        self.voltage_1_line = self.axs[0, 0].plot([], [])
-        self.voltage_2_line = self.axs[0, 0].plot([], [])
-        self.voltage_3_line = self.axs[0, 0].plot([], [])
-        self.current_1_line = self.axs[0, 1].plot([], [])
-        self.current_2_line = self.axs[0, 1].plot([], [])
-        self.current_3_line = self.axs[0, 1].plot([], [])
-        self.active_power_line = self.axs[1, 0].plot([], [])
-        self.reactive_power_line = self.axs[1, 0].plot([], [])
-        self.apparent_power_line = self.axs[1, 0].plot([], [])
-        self.power_factor_line = self.axs[1, 1].plot([], [])
+        self.voltage_1_points = []
+        self.voltage_2_points = []
+        self.voltage_3_points = []
+        self.current_1_points = []
+        self.current_2_points = []
+        self.current_3_points = []
+        self.active_power_points = []
+        self.reactive_power_points = []
+        self.apparent_power_points = []
+        self.power_factor_points = []
+
+        # Initialize lines on each subplot
+        (self.voltage_1_line,) = self.axs[0, 0].plot([], [])
+        (self.voltage_2_line,) = self.axs[0, 0].plot([], [])
+        (self.voltage_3_line,) = self.axs[0, 0].plot([], [])
+        (self.current_1_line,) = self.axs[0, 1].plot([], [])
+        (self.current_2_line,) = self.axs[0, 1].plot([], [])
+        (self.current_3_line,) = self.axs[0, 1].plot([], [])
+        (self.active_power_line,) = self.axs[1, 0].plot([], [])
+        (self.reactive_power_line,) = self.axs[1, 0].plot([], [])
+        (self.apparent_power_line,) = self.axs[1, 0].plot([], [])
+        (self.power_factor_line,) = self.axs[1, 1].plot([], [])
 
         # Set titles for each subplot
         self.axs[0, 0].set_title("Voltage")
@@ -89,69 +100,93 @@ class Plotter:
             ha="center",
         )
 
-        self.animation = FuncAnimation(
-            fig=plt.gcf(), func=self.update, save_count=MAXIMUM_PLOT_POINTS
-        )
-        # Create animation
-        plt.show()
+        self.previous_timestamp = 0
 
-    def update(self, measurement_point):
-        timestamp = measurement_point["timestamp"]
-        voltage_1 = measurement_point["voltage_1"]
-        voltage_2 = measurement_point["voltage_2"]
-        voltage_3 = measurement_point["voltage_3"]
-        current_1 = measurement_point["current_1"]
-        current_2 = measurement_point["current_2"]
-        current_3 = measurement_point["current_3"]
-        active_power = measurement_point["active_power"]
-        reactive_power = measurement_point["reactive_power"]
-        apparent_power = measurement_point["apparent_power"]
-        power_factor = measurement_point["power_factor"]
+    def update(self, measurement_point: dict) -> None:
+        """
+        Function used to update the plot already shown when the instance
+        was created.
+        """
+        new_timestamp = measurement_point["timestamp"]
+        new_voltage_1 = measurement_point["voltage_1"]
+        new_voltage_2 = measurement_point["voltage_2"]
+        new_voltage_3 = measurement_point["voltage_3"]
+        new_current_1 = measurement_point["current_1"]
+        new_current_2 = measurement_point["current_2"]
+        new_current_3 = measurement_point["current_3"]
+        new_active_power = measurement_point["active_power"]
+        new_reactive_power = measurement_point["reactive_power"]
+        new_apparent_power = measurement_point["apparent_power"]
+        new_power_factor = measurement_point["power_factor"]
 
-        # Add new data to the lines on each subplot
-        self.timestamp_points.append(timestamp)
-        self.voltage_1_line[0].set_data(self.timestamp_points, voltage_1)
-        self.voltage_2_line[0].set_data(self.timestamp_points, voltage_2)
-        self.voltage_3_line[0].set_data(self.timestamp_points, voltage_3)
-        self.current_1_line[0].set_data(self.timestamp_points, current_1)
-        self.current_2_line[0].set_data(self.timestamp_points, current_2)
-        self.current_3_line[0].set_data(self.timestamp_points, current_3)
-        self.active_power_line[0].set_data(self.timestamp_points, active_power)
-        self.reactive_power_line[0].set_data(self.timestamp_points, reactive_power)
-        self.apparent_power_line[0].set_data(self.timestamp_points, apparent_power)
-        self.power_factor_line[0].set_data(self.timestamp_points, power_factor)
+        plot_lines = [
+            self.voltage_1_line,
+            self.voltage_2_line,
+            self.voltage_3_line,
+            self.current_1_line,
+            self.current_2_line,
+            self.current_3_line,
+            self.active_power_line,
+            self.reactive_power_line,
+            self.apparent_power_line,
+            self.power_factor_line,
+        ]
+
+        value_data_points = [
+            self.timestamp_points,
+            self.voltage_1_points,
+            self.voltage_2_points,
+            self.voltage_3_points,
+            self.current_1_points,
+            self.current_2_points,
+            self.current_3_points,
+            self.active_power_points,
+            self.reactive_power_points,
+            self.apparent_power_points,
+            self.power_factor_points,
+        ]
+
+        if len(self.timestamp_points) < MAXIMUM_PLOT_POINTS:
+            if new_timestamp != self.previous_timestamp:
+                self.timestamp_points.append(new_timestamp)
+                self.voltage_1_points.append(new_voltage_1)
+                self.voltage_2_points.append(new_voltage_2)
+                self.voltage_3_points.append(new_voltage_3)
+                self.current_1_points.append(new_current_1)
+                self.current_2_points.append(new_current_2)
+                self.current_3_points.append(new_current_3)
+                self.active_power_points.append(new_active_power)
+                self.reactive_power_points.append(new_reactive_power)
+                self.apparent_power_points.append(new_apparent_power)
+                self.power_factor_points.append(new_power_factor)
+
+                print(self.timestamp_points)
+
+        else:
+            for data_list in value_data_points:
+                data_list.pop(0)
+
+        # Set the new acquired data in plot lines
+        for line, value in zip(plot_lines, value_data_points):
+            line.set_xdata(new_timestamp)
+            line.set_ydata(value)
 
         # Update dynamic text
-        self.total_energy += active_power * DELTA_T / 3600000.0
+        self.total_energy += new_active_power * DELTA_T / 3600000.0
         self.total_energy_text.set_text(
             f"Total consumed energy: {self.total_energy:.2f} kWh"
         )
 
-        self.estimated_price += active_power * DELTA_T / 3600000.0 * PRICE_PER_KWH
+        self.estimated_price += new_active_power * DELTA_T / 3600000.0 * PRICE_PER_KWH
         self.estimated_price_text.set_text(
             f"Estimated price: {self.estimated_price:.2f}€"
         )
 
-        # Redraw the plot
+        # drawing updated values
         self.fig.canvas.draw()
+        self.fig.canvas.flush_events()
 
-        # Limit the number of points on the plot
-        if len(self.timestamp_points) > MAXIMUM_PLOT_POINTS:
-            self.timestamp_points.pop(0)
-
-            for line in [
-                self.voltage_1_line,
-                self.voltage_2_line,
-                self.voltage_3_line,
-                self.current_1_line,
-                self.current_2_line,
-                self.current_3_line,
-                self.active_power_line,
-                self.reactive_power_line,
-                self.apparent_power_line,
-                self.power_factor_line,
-            ]:
-                line[0].set_data(self.timestamp_points, line[0].get_ydata()[1:])
+        self.previous_timestamp = new_timestamp
 
     def close_figures(self) -> None:
         """

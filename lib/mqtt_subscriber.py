@@ -10,6 +10,7 @@ class MQTTSubscriber:
         self.broker_address = broker_address
         self.port = port
         self.topic = topic
+        self.is_connected = False
 
     # Callback function to handle incoming messages
     def on_message(self, client, userdata, message):
@@ -27,16 +28,16 @@ class MQTTSubscriber:
             i3: current_3,
         }
         """
-        msg = message.payload.decode('utf-8')
+        msg = message.payload.decode("utf-8")
         data = json.loads(msg)
         Measurement.create_measurement(
-            timestamp=data['ts'],
-            voltage_1=data['v1'],
-            voltage_2=data['v2'],
-            voltage_3=data['v3'],
-            current_1=data['i1'],
-            current_2=data['i2'],
-            current_3=data['i3'],
+            timestamp=data["ts"],
+            voltage_1=data["v1"],
+            voltage_2=data["v2"],
+            voltage_3=data["v3"],
+            current_1=data["i1"],
+            current_2=data["i2"],
+            current_3=data["i3"],
         )
 
     def connect(self):
@@ -56,7 +57,11 @@ class MQTTSubscriber:
         # Start MQTT loop to receive messages
         self.client.loop_start()
 
+        # Flag confirming it the connection was successful
+        self.is_connected = True
+
     def disconnect(self):
+        self.is_connected = False
         # Stop MQTT loop and disconnect from MQTT broker
         self.client.loop_stop()
         self.client.disconnect()

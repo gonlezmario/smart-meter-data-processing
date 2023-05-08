@@ -11,11 +11,6 @@ from lib.models import Measurement
 from lib.mqtt_subscriber import MQTTSubscriber
 from lib.plotting import Plotter
 
-MAXIMUM_PLOT_POINTS = 3000
-DELTA_T = 1
-PRICE_PER_KWH = 0.2525  # Average price in € for
-# the first half of 2022 in the EU
-
 
 class MQTTClientService:
     def __init__(self) -> None:
@@ -42,18 +37,20 @@ class MQTTClientService:
                 self.mqtt_thread.start()
                 self.mqtt_thread_started = True
 
-            logging.info("Querying last measurements...")
-            latest_measurements = Measurement.query_latest_measurements()
-            print(latest_measurements)
+            if self.mqtt_subscriber.is_connected:
+                logging.debug("Querying last measurements...")
+                latest_measurements = Measurement.query_latest_measurements()
 
-            logging.info("Computing powers...")
-            measurement = ProcessedMeasurement(measurements=latest_measurements)
+                logging.debug("Computing powers...")
+                measurement_point = ProcessedMeasurement(
+                    measurements=latest_measurements
+                )
 
-            logging.info("Plotting results...")
-            # self.plotter.update(
-            #     measurement_point=measurement.get_all_measurement_attributes()
-            # )
-            time.sleep(1)
+                logging.debug("Plotting results...")
+                self.plotter.update(
+                    measurement_point=measurement_point.get_all_measurement_attributes()
+                )
+            time.sleep(0.3)
 
 
 if __name__ == "__main__":

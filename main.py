@@ -3,9 +3,6 @@ import threading
 import time
 from logging.handlers import RotatingFileHandler
 
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
-
 from lib.compute_powers import ProcessedMeasurement
 from lib.models import Measurement
 from lib.mqtt_subscriber import MQTTSubscriber
@@ -23,12 +20,11 @@ class MQTTClientService:
         self.plotter = Plotter()
 
     def stop(self) -> None:
-        self.stop_main = True
         logging.info("Disconnecting from the MQTT broker...")
+        self.stop_main = True
         self.mqtt_subscriber.disconnect()
         logging.info("Joining MQTT Subscriber thread...")
         self.mqtt_thread.join()
-        self.plotter.close_figures()
 
     def main(self) -> None:
         while not self.stop_main:
@@ -64,7 +60,8 @@ if __name__ == "__main__":
             )
         ],
         level=logging.INFO,
-        format="%(asctime)s %(levelname)s %(filename)s:%(lineno)d in %(funcName)s(): %(message)s",
+        format="%(asctime)s %(levelname)s %(filename)s:%(lineno)d in\
+            %(funcName)s(): %(message)s",
         datefmt="%Y-%m-%dT%H:%M:%S",
     )
 
@@ -79,5 +76,9 @@ if __name__ == "__main__":
         service.stop()
 
     except Exception as e:
-        logging.critical("Unhandled exception arisen: %s. Stopping the service..." % e)
+        logging.critical(
+            "Unhandled exception arisen: %s. \
+            Stopping the service..."
+            % e
+        )
         service.stop()

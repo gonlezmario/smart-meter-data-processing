@@ -25,22 +25,39 @@ class Plotter:
         is written instead, which is called continuously with the
         computed newest data.
         """
+
+        self.timestamp_points = []
+        self.voltage_1_points = []
+        self.voltage_2_points = []
+        self.voltage_3_points = []
+        self.current_1_points = []
+        self.current_2_points = []
+        self.current_3_points = []
+        self.active_power_points = []
+        self.reactive_power_points = []
+        self.apparent_power_points = []
+        self.power_factor_points = []
+        self.total_energy = 0
+        self.estimated_price = 0
+        self.previous_timestamp = 0
+
+        # Enable interactive mode
         plt.ion()
 
         # Create a 2x2 grid for subplots
         self.fig, self.axs = plt.subplots(2, 2, figsize=(16, 12))
 
         # Initialize lines on each subplot
-        self.voltage_1_line, = self.axs[0, 0].plot([], [], animated=True)
-        self.voltage_2_line, = self.axs[0, 0].plot([], [], animated=True)
-        self.voltage_3_line, = self.axs[0, 0].plot([], [], animated=True)
-        self.current_1_line, = self.axs[0, 1].plot([], [], animated=True)
-        self.current_2_line, = self.axs[0, 1].plot([], [], animated=True)
-        self.current_3_line, = self.axs[0, 1].plot([], [], animated=True)
-        self.active_power_line, = self.axs[1, 0].plot([], [], animated=True)
-        self.reactive_power_line, = self.axs[1, 0].plot([], [], animated=True)
-        self.apparent_power_line, = self.axs[1, 0].plot([], [], animated=True)
-        self.power_factor_line, = self.axs[1, 1].plot([], [], animated=True)
+        self.voltage_1_line, = self.axs[0, 0].plot(self.timestamp_points, self.voltage_1_points)
+        self.voltage_2_line, = self.axs[0, 0].plot(self.timestamp_points, self.voltage_1_points)
+        self.voltage_3_line, = self.axs[0, 0].plot(self.timestamp_points, self.voltage_1_points)
+        self.current_1_line, = self.axs[0, 1].plot(self.timestamp_points, self.current_1_points)
+        self.current_2_line, = self.axs[0, 1].plot(self.timestamp_points, self.current_1_points)
+        self.current_3_line, = self.axs[0, 1].plot(self.timestamp_points, self.current_1_points)
+        self.active_power_line, = self.axs[1, 0].plot(self.timestamp_points, self.active_power_points)
+        self.reactive_power_line, = self.axs[1, 0].plot(self.timestamp_points, self.reactive_power_points)
+        self.apparent_power_line, = self.axs[1, 0].plot(self.timestamp_points, self.apparent_power_points)
+        self.power_factor_line, = self.axs[1, 1].plot(self.timestamp_points, self.power_factor_points)
 
         # Set titles for each subplot
         self.axs[0, 0].set_title("Voltage")
@@ -68,21 +85,6 @@ class Plotter:
         self.axs[0, 1].set_ylim(-80, 80)
         self.axs[1, 0].set_ylim(-46000, 46000)
         self.axs[1, 1].set_ylim(0, 1)
-
-        self.timestamp_points = []
-        self.voltage_1_points = []
-        self.voltage_2_points = []
-        self.voltage_3_points = []
-        self.current_1_points = []
-        self.current_2_points = []
-        self.current_3_points = []
-        self.active_power_points = []
-        self.reactive_power_points = []
-        self.apparent_power_points = []
-        self.power_factor_points = []
-        self.total_energy = 0
-        self.estimated_price = 0
-        self.previous_timestamp = 0
 
         # Add dynamic text at the bottom
         self.total_energy_text = self.fig.text(
@@ -172,14 +174,6 @@ class Plotter:
         self.reactive_power_line.set_data(self.timestamp_points, self.reactive_power_points)
         self.apparent_power_line.set_data(self.timestamp_points, self.apparent_power_points)
         self.power_factor_line.set_data(self.timestamp_points, self.power_factor_points)
-
-
-
-
-        # Set the new acquired data in plot lines
-        for line, value in zip(plot_lines, value_data_points):
-            line.set_xdata(new_timestamp)
-            line.set_ydata(value)
 
         joules_to_kWh_factor = 3600000.0
         # Update dynamic text

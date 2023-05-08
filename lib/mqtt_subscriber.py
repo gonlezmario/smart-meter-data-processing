@@ -28,6 +28,7 @@ class MQTTSubscriber:
             i3: current_3,
         }
         """
+        self.is_connected = True
         msg = message.payload.decode("utf-8")
         data = json.loads(msg)
         Measurement.create_measurement(
@@ -58,7 +59,7 @@ class MQTTSubscriber:
         self.client.loop_start()
 
         # Flag confirming it the connection was successful
-        self.is_connected = True
+        
 
     def disconnect(self):
         self.is_connected = False

@@ -160,8 +160,6 @@ class Plotter:
                 self.apparent_power_points.append(new_apparent_power)
                 self.power_factor_points.append(new_power_factor)
 
-                print(self.timestamp_points)
-
         else:
             for data_list in value_data_points:
                 data_list.pop(0)

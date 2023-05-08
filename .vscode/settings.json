@@ -3,7 +3,6 @@
     "editor.codeActionsOnSave": {
         "source.organizeImports": true
     },
-    "python.formatting.provider": "autopep8",
     "cSpell.words": [
         "keepalive",
         "levelname",
@@ -16,5 +15,8 @@
         "userdata",
         "xdata",
         "ydata"
-    ]
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    }
 }

@@ -1,10 +1,16 @@
+import configparser
+
 import matplotlib.pyplot as plt
-import numpy as np
 from matplotlib.animation import FuncAnimation
+
+MAXIMUM_PLOT_POINTS = 3000
+DELTA_T = 1
+PRICE_PER_KWH = 0.2525  # Average price in € for
+# the first half of 2022 in the EU
 
 
 class Plotter:
-    def __init__(self, fig=None, axs=None):
+    def __init__(self):
         """
         Class constructor. Note that the total energy and the estimated price
         are not stored in the database since both depend on the starting time.
@@ -22,25 +28,22 @@ class Plotter:
         monitor reactance.
 
         """
-        if fig is None:
-            self.fig, self.axs = plt.subplots(2, 2, figsize=(16, 12))
-            self.total_energy = 0
-            self.estimated_price = 0
-        else:
-            self.fig = fig
-            self.axs = axs
+
+        # Create a 2x2 grid for subplots
+        self.fig, self.axs = plt.subplots(2, 2, figsize=(16, 12))
 
         # Initialize lines on each subplot
-        (self.voltage_1_line,) = self.axs[0, 0].plot([], [])
-        (self.voltage_2_line,) = self.axs[0, 0].plot([], [])
-        (self.voltage_3_line,) = self.axs[0, 0].plot([], [])
-        (self.current_1_line,) = self.axs[0, 1].plot([], [])
-        (self.current_2_line,) = self.axs[0, 1].plot([], [])
-        (self.current_3_line,) = self.axs[0, 1].plot([], [])
-        (self.active_power_line,) = self.axs[1, 0].plot([], [])
-        (self.reactive_power_line,) = self.axs[1, 0].plot([], [])
-        (self.apparent_power_line,) = self.axs[1, 0].plot([], [])
-        (self.power_factor_line,) = self.axs[1, 1].plot([], [])
+        self.timestamp_points = []
+        self.voltage_1_line = self.axs[0, 0].plot([], [])
+        self.voltage_2_line = self.axs[0, 0].plot([], [])
+        self.voltage_3_line = self.axs[0, 0].plot([], [])
+        self.current_1_line = self.axs[0, 1].plot([], [])
+        self.current_2_line = self.axs[0, 1].plot([], [])
+        self.current_3_line = self.axs[0, 1].plot([], [])
+        self.active_power_line = self.axs[1, 0].plot([], [])
+        self.reactive_power_line = self.axs[1, 0].plot([], [])
+        self.apparent_power_line = self.axs[1, 0].plot([], [])
+        self.power_factor_line = self.axs[1, 1].plot([], [])
 
         # Set titles for each subplot
         self.axs[0, 0].set_title("Voltage")
@@ -69,7 +72,10 @@ class Plotter:
         self.axs[1, 0].set_ylim(-46000, 46000)
         self.axs[1, 1].set_ylim(0, 1)
 
-        # Add text at the bottom of each plot
+        self.total_energy = 0
+        self.estimated_price = 0
+
+        # Add dynamic text at the bottom
         self.total_energy_text = self.fig.text(
             0.5,
             0.05,
@@ -79,16 +85,17 @@ class Plotter:
         self.estimated_price_text = self.fig.text(
             0.5,
             0.02,
-            f"Estimated price: ${self.estimated_price:.2f}",
+            f"Estimated price: {self.estimated_price:.2f}€",
             ha="center",
         )
 
+        self.animation = FuncAnimation(
+            fig=plt.gcf(), func=self.update, save_count=MAXIMUM_PLOT_POINTS
+        )
         # Create animation
-        self.animation = FuncAnimation(fig=plt.gcf(), func=self.update, save_count=3000)
         plt.show()
 
-    def update(self, measurement_point: dict):
-        # Update lines on each subplot
+    def update(self, measurement_point):
         timestamp = measurement_point["timestamp"]
         voltage_1 = measurement_point["voltage_1"]
         voltage_2 = measurement_point["voltage_2"]
@@ -100,32 +107,54 @@ class Plotter:
         reactive_power = measurement_point["reactive_power"]
         apparent_power = measurement_point["apparent_power"]
         power_factor = measurement_point["power_factor"]
-        total_energy = 0
-        estimated_price = 0
 
-        self.voltage_1_line.set_data(timestamp, voltage_1)
-        self.voltage_2_line.set_data(timestamp, voltage_2)
-        self.voltage_3_line.set_data(timestamp, voltage_3)
-        self.current_1_line.set_data(timestamp, current_1)
-        self.current_2_line.set_data(timestamp, current_2)
-        self.current_3_line.set_data(timestamp, current_3)
-        self.active_power_line.set_data(timestamp, active_power)
-        self.reactive_power_line.set_data(timestamp, reactive_power)
-        self.apparent_power_line.set_data(timestamp, apparent_power)
-        self.pf_line.set_data(timestamp, power_factor)
+        # Add new data to the lines on each subplot
+        self.timestamp_points.append(timestamp)
+        self.voltage_1_line[0].set_data(self.timestamp_points, voltage_1)
+        self.voltage_2_line[0].set_data(self.timestamp_points, voltage_2)
+        self.voltage_3_line[0].set_data(self.timestamp_points, voltage_3)
+        self.current_1_line[0].set_data(self.timestamp_points, current_1)
+        self.current_2_line[0].set_data(self.timestamp_points, current_2)
+        self.current_3_line[0].set_data(self.timestamp_points, current_3)
+        self.active_power_line[0].set_data(self.timestamp_points, active_power)
+        self.reactive_power_line[0].set_data(self.timestamp_points, reactive_power)
+        self.apparent_power_line[0].set_data(self.timestamp_points, apparent_power)
+        self.power_factor_line[0].set_data(self.timestamp_points, power_factor)
 
-        return (
-            self.voltage_1_line,
-            self.voltage_2_line,
-            self.voltage_3_line,
-            self.current_1_line,
-            self.current_2_line,
-            self.current_3_line,
-            self.active_power_line,
-            self.reactive_power_line,
-            self.apparent_power_line,
-            self.power_factor_line,
+        # Update dynamic text
+        self.total_energy += active_power * DELTA_T / 3600000.0
+        self.total_energy_text.set_text(
+            f"Total consumed energy: {self.total_energy:.2f} kWh"
         )
 
+        self.estimated_price += active_power * DELTA_T / 3600000.0 * PRICE_PER_KWH
+        self.estimated_price_text.set_text(
+            f"Estimated price: {self.estimated_price:.2f}€"
+        )
 
-Plotter()
+        # Redraw the plot
+        self.fig.canvas.draw()
+
+        # Limit the number of points on the plot
+        if len(self.timestamp_points) > MAXIMUM_PLOT_POINTS:
+            self.timestamp_points.pop(0)
+
+            for line in [
+                self.voltage_1_line,
+                self.voltage_2_line,
+                self.voltage_3_line,
+                self.current_1_line,
+                self.current_2_line,
+                self.current_3_line,
+                self.active_power_line,
+                self.reactive_power_line,
+                self.apparent_power_line,
+                self.power_factor_line,
+            ]:
+                line[0].set_data(self.timestamp_points, line[0].get_ydata()[1:])
+
+    def close_figures(self) -> None:
+        """
+        Closes the generated plot in case the service needs to stop
+        """
+        plt.close()

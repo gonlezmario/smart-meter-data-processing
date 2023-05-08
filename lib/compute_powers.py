@@ -117,16 +117,30 @@ class ProcessedMeasurement:
 
     def get_total_reactive_power(self) -> float:
         """
+        The getter uses the following formula
+
         Q = sqrt((S + P) * (S - P))
+
+        Note that however, some problems might arise if the product
+        is a negative number. This situation is handled with a factor
+        of -1 applied in this case.
         """
         total_active_power = self.get_total_active_power()
         total_apparent_power = self.get_total_apparent_power()
 
-        total_reactive_power = np.sqrt(
-            (total_apparent_power + total_active_power)
-            * (total_apparent_power - total_active_power)
-        )
+        if total_apparent_power - total_apparent_power > 0:
+            total_reactive_power = np.sqrt(
+                (total_apparent_power + total_active_power)
+                * (total_apparent_power - total_active_power)
+            )
+            return total_reactive_power
 
+        total_reactive_power = -1 * np.sqrt(
+            np.abs(
+                (total_apparent_power + total_active_power)
+                * (total_apparent_power - total_active_power)
+            )
+        )
         return total_reactive_power
 
     def get_power_factor(self) -> float:
@@ -146,6 +160,7 @@ class ProcessedMeasurement:
 
         Includes:
 
+        "timestamp": int
         "voltage_1": float
         "voltage_2": float
         "voltage_3": float
@@ -173,4 +188,4 @@ class ProcessedMeasurement:
             }
 
         except Exception as e:
-            logging.error("Uncaught exception : %s" % e)
+            logging.error("Uncaught exception: %s" % e)

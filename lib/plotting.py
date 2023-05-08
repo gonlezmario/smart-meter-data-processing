@@ -1,21 +1,15 @@
-import configparser
-
 import matplotlib.pyplot as plt
+from lib.config import MAXIMUM_PLOT_POINTS, PRICE_PER_KWH, DELTA_T
 from matplotlib.animation import FuncAnimation
-
-MAXIMUM_PLOT_POINTS = 3000
-DELTA_T = 1
-PRICE_PER_KWH = 0.2525  # Average price in € for
-# the first half of 2022 in the EU
 
 
 class Plotter:
     def __init__(self):
         """
-        Class constructor. Note that the total energy and the estimated price
-        are not stored in the database since both depend on the starting time.
-        Therefore, both are class attributes since they are only used to be
-        displayed.
+        Class constructor. Note that the total energy and the estimated
+        price are not stored in the database since both depend on the
+        starting time. Therefore, both are class attributes since they
+        are only used to be displayed.
 
         Furthermore, it would not be secure to store this values in the db,
         that way they would be prone for manipulation. They are only displayed
@@ -26,35 +20,27 @@ class Plotter:
         Both consider only the active power since that is what is usually
         billed, the reactive power and power factor are however displayed to
         monitor reactance.
+
+        Matplotlib is not thread-safe and therefore an update function
+        is written instead, which is called continuously with the
+        computed newest data.
         """
         plt.ion()
 
         # Create a 2x2 grid for subplots
         self.fig, self.axs = plt.subplots(2, 2, figsize=(16, 12))
 
-        self.timestamp_points = []
-        self.voltage_1_points = []
-        self.voltage_2_points = []
-        self.voltage_3_points = []
-        self.current_1_points = []
-        self.current_2_points = []
-        self.current_3_points = []
-        self.active_power_points = []
-        self.reactive_power_points = []
-        self.apparent_power_points = []
-        self.power_factor_points = []
-
         # Initialize lines on each subplot
-        (self.voltage_1_line,) = self.axs[0, 0].plot([], [])
-        (self.voltage_2_line,) = self.axs[0, 0].plot([], [])
-        (self.voltage_3_line,) = self.axs[0, 0].plot([], [])
-        (self.current_1_line,) = self.axs[0, 1].plot([], [])
-        (self.current_2_line,) = self.axs[0, 1].plot([], [])
-        (self.current_3_line,) = self.axs[0, 1].plot([], [])
-        (self.active_power_line,) = self.axs[1, 0].plot([], [])
-        (self.reactive_power_line,) = self.axs[1, 0].plot([], [])
-        (self.apparent_power_line,) = self.axs[1, 0].plot([], [])
-        (self.power_factor_line,) = self.axs[1, 1].plot([], [])
+        self.voltage_1_line, = self.axs[0, 0].plot([], [], animated=True)
+        self.voltage_2_line, = self.axs[0, 0].plot([], [], animated=True)
+        self.voltage_3_line, = self.axs[0, 0].plot([], [], animated=True)
+        self.current_1_line, = self.axs[0, 1].plot([], [], animated=True)
+        self.current_2_line, = self.axs[0, 1].plot([], [], animated=True)
+        self.current_3_line, = self.axs[0, 1].plot([], [], animated=True)
+        self.active_power_line, = self.axs[1, 0].plot([], [], animated=True)
+        self.reactive_power_line, = self.axs[1, 0].plot([], [], animated=True)
+        self.apparent_power_line, = self.axs[1, 0].plot([], [], animated=True)
+        self.power_factor_line, = self.axs[1, 1].plot([], [], animated=True)
 
         # Set titles for each subplot
         self.axs[0, 0].set_title("Voltage")
@@ -83,8 +69,20 @@ class Plotter:
         self.axs[1, 0].set_ylim(-46000, 46000)
         self.axs[1, 1].set_ylim(0, 1)
 
+        self.timestamp_points = []
+        self.voltage_1_points = []
+        self.voltage_2_points = []
+        self.voltage_3_points = []
+        self.current_1_points = []
+        self.current_2_points = []
+        self.current_3_points = []
+        self.active_power_points = []
+        self.reactive_power_points = []
+        self.apparent_power_points = []
+        self.power_factor_points = []
         self.total_energy = 0
         self.estimated_price = 0
+        self.previous_timestamp = 0
 
         # Add dynamic text at the bottom
         self.total_energy_text = self.fig.text(
@@ -100,12 +98,11 @@ class Plotter:
             ha="center",
         )
 
-        self.previous_timestamp = 0
-
     def update(self, measurement_point: dict) -> None:
         """
         Function used to update the plot already shown when the instance
-        was created.
+        was created. There is a maximum value of data points, declared
+        in the config.ini
         """
         new_timestamp = measurement_point["timestamp"]
         new_voltage_1 = measurement_point["voltage_1"]
@@ -163,19 +160,35 @@ class Plotter:
         else:
             for data_list in value_data_points:
                 data_list.pop(0)
+        
+        # Update plot lines
+        self.voltage_1_line.set_data(self.timestamp_points, self.voltage_1_points)
+        self.voltage_2_line.set_data(self.timestamp_points, self.voltage_2_points)
+        self.voltage_3_line.set_data(self.timestamp_points, self.voltage_3_points)
+        self.current_1_line.set_data(self.timestamp_points, self.current_1_points)
+        self.current_2_line.set_data(self.timestamp_points, self.current_2_points)
+        self.current_3_line.set_data(self.timestamp_points, self.current_3_points)
+        self.active_power_line.set_data(self.timestamp_points, self.active_power_points)
+        self.reactive_power_line.set_data(self.timestamp_points, self.reactive_power_points)
+        self.apparent_power_line.set_data(self.timestamp_points, self.apparent_power_points)
+        self.power_factor_line.set_data(self.timestamp_points, self.power_factor_points)
+
+
+
 
         # Set the new acquired data in plot lines
         for line, value in zip(plot_lines, value_data_points):
             line.set_xdata(new_timestamp)
             line.set_ydata(value)
 
+        joules_to_kWh_factor = 3600000.0
         # Update dynamic text
-        self.total_energy += new_active_power * DELTA_T / 3600000.0
+        self.total_energy += new_active_power * DELTA_T / joules_to_kWh_factor
         self.total_energy_text.set_text(
             f"Total consumed energy: {self.total_energy:.2f} kWh"
         )
 
-        self.estimated_price += new_active_power * DELTA_T / 3600000.0 * PRICE_PER_KWH
+        self.estimated_price += new_active_power * DELTA_T / joules_to_kWh_factor * PRICE_PER_KWH
         self.estimated_price_text.set_text(
             f"Estimated price: {self.estimated_price:.2f}€"
         )
@@ -185,9 +198,3 @@ class Plotter:
         self.fig.canvas.flush_events()
 
         self.previous_timestamp = new_timestamp
-
-    def close_figures(self) -> None:
-        """
-        Closes the generated plot in case the service needs to stop
-        """
-        plt.close()

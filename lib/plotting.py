@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from lib.config import MAXIMUM_PLOT_POINTS, PRICE_PER_KWH, DELTA_T
 from matplotlib.animation import FuncAnimation
+import time
 
 
 class Plotter:
@@ -49,11 +50,11 @@ class Plotter:
 
         # Initialize lines on each subplot
         self.voltage_1_line, = self.axs[0, 0].plot(self.timestamp_points, self.voltage_1_points)
-        self.voltage_2_line, = self.axs[0, 0].plot(self.timestamp_points, self.voltage_1_points)
-        self.voltage_3_line, = self.axs[0, 0].plot(self.timestamp_points, self.voltage_1_points)
+        self.voltage_2_line, = self.axs[0, 0].plot(self.timestamp_points, self.voltage_2_points)
+        self.voltage_3_line, = self.axs[0, 0].plot(self.timestamp_points, self.voltage_3_points)
         self.current_1_line, = self.axs[0, 1].plot(self.timestamp_points, self.current_1_points)
-        self.current_2_line, = self.axs[0, 1].plot(self.timestamp_points, self.current_1_points)
-        self.current_3_line, = self.axs[0, 1].plot(self.timestamp_points, self.current_1_points)
+        self.current_2_line, = self.axs[0, 1].plot(self.timestamp_points, self.current_2_points)
+        self.current_3_line, = self.axs[0, 1].plot(self.timestamp_points, self.current_3_points)
         self.active_power_line, = self.axs[1, 0].plot(self.timestamp_points, self.active_power_points)
         self.reactive_power_line, = self.axs[1, 0].plot(self.timestamp_points, self.reactive_power_points)
         self.apparent_power_line, = self.axs[1, 0].plot(self.timestamp_points, self.apparent_power_points)
@@ -73,18 +74,6 @@ class Plotter:
         # Set x-labels for bottom subplots
         self.axs[1, 0].set_xlabel("Time")
         self.axs[1, 1].set_xlabel("Time")
-
-        # Set shared x-limits for all subplots
-        self.axs[0, 0].set_xlim(0, 3000)
-        self.axs[0, 1].set_xlim(0, 3000)
-        self.axs[1, 0].set_xlim(0, 3000)
-        self.axs[1, 1].set_xlim(0, 3000)
-
-        # Set shared y-limits for each subplot
-        self.axs[0, 0].set_ylim(-575, 575)
-        self.axs[0, 1].set_ylim(-80, 80)
-        self.axs[1, 0].set_ylim(-46000, 46000)
-        self.axs[1, 1].set_ylim(0, 1)
 
         # Add dynamic text at the bottom
         self.total_energy_text = self.fig.text(
@@ -162,7 +151,19 @@ class Plotter:
         else:
             for data_list in value_data_points:
                 data_list.pop(0)
-        
+
+        # Set shared x-limits for all subplots
+        self.axs[0, 0].set_xlim(min(self.timestamp_points), max(self.timestamp_points))
+        self.axs[0, 1].set_xlim(min(self.timestamp_points), max(self.timestamp_points))
+        self.axs[1, 0].set_xlim(min(self.timestamp_points), max(self.timestamp_points))
+        self.axs[1, 1].set_xlim(min(self.timestamp_points), max(self.timestamp_points))
+
+        # Set shared y-limits for each subplot
+        self.axs[0, 0].set_ylim(min(self.voltage_1_points + self.voltage_2_points + self.voltage_3_points)-10, max(self.voltage_1_points + self.voltage_2_points + self.voltage_3_points)+10)
+        self.axs[0, 1].set_ylim(min(self.current_1_points + self.current_2_points + self.current_3_points)-10, max(self.current_1_points + self.current_2_points + self.current_3_points)+10)
+        self.axs[1, 0].set_ylim(min(self.active_power_points + self.reactive_power_points + self.apparent_power_points) -10, max(self.active_power_points + self.reactive_power_points + self.apparent_power_points)+10)
+        self.axs[1, 1].set_ylim(min(self.power_factor_points) -0.1, max(self.power_factor_points) + 0.1)
+
         # Update plot lines
         self.voltage_1_line.set_data(self.timestamp_points, self.voltage_1_points)
         self.voltage_2_line.set_data(self.timestamp_points, self.voltage_2_points)
@@ -175,8 +176,8 @@ class Plotter:
         self.apparent_power_line.set_data(self.timestamp_points, self.apparent_power_points)
         self.power_factor_line.set_data(self.timestamp_points, self.power_factor_points)
 
-        joules_to_kWh_factor = 3600000.0
         # Update dynamic text
+        joules_to_kWh_factor = 3600000.0
         self.total_energy += new_active_power * DELTA_T / joules_to_kWh_factor
         self.total_energy_text.set_text(
             f"Total consumed energy: {self.total_energy:.2f} kWh"

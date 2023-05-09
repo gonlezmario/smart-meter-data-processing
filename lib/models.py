@@ -72,23 +72,10 @@ class Measurement(Base):
     @classmethod
     def query_latest_measurements(cls) -> list:
         """
-        The first ORM query is equivalent to:
-        SELECT DISTINCT timestamp
-        FROM Measurement
-        ORDER BY timestamp DESC
-        LIMIT 1;
-
-        Which gets the latest_timestamp in the database.
-        With this parameter, all the measurements with this same
-        timestamp are queried.
-
-        SELECT *
-        FROM Measurement
-        WHERE timestamp = latest_timestamp;
         """
         session = cls._session_initialization()
 
-        # Group measurements with the same timestamp together
+        # Get the latest timestamp in the database
         latest_timestamp_db = (
             session.query(Measurement.timestamp.distinct())
             .order_by(Measurement.timestamp.desc())
@@ -96,11 +83,22 @@ class Measurement(Base):
             .scalar()
         )
 
+        # Get the previous timestamp to the latest
+        previous_timestamp_db = (
+            session.query(Measurement.timestamp.distinct())
+            .filter(Measurement.timestamp < latest_timestamp_db)
+            .order_by(Measurement.timestamp.desc())
+            .limit(1)
+            .scalar()
+        )
+
+        # Get all the measurements with the previous timestamp to the latest
         grouped_measurements = (
             session.query(Measurement)
-            .filter(Measurement.timestamp == latest_timestamp_db)
+            .filter(Measurement.timestamp == previous_timestamp_db)
             .all()
         )
+
         return grouped_measurements
 
 

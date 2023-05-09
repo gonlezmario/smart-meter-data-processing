@@ -53,22 +53,22 @@ class ProcessedMeasurement:
             )
 
     def get_mean_voltage_1(self) -> float:
-        return np.mean(self.voltage_1_data_points)
+        return float(np.mean(self.voltage_1_data_points))
 
     def get_mean_voltage_2(self) -> float:
-        return np.mean(self.voltage_2_data_points)
+        return float(np.mean(self.voltage_2_data_points))
 
     def get_mean_voltage_3(self) -> float:
-        return np.mean(self.voltage_3_data_points)
+        return float(np.mean(self.voltage_3_data_points))
 
     def get_mean_current_1(self) -> float:
-        return np.mean(self.current_1_data_points)
+        return float(np.mean(self.current_1_data_points))
 
     def get_mean_current_2(self) -> float:
-        return np.mean(self.current_2_data_points)
+        return float(np.mean(self.current_2_data_points))
 
     def get_mean_current_3(self) -> float:
-        return np.mean(self.current_3_data_points)
+        return float(np.mean(self.current_3_data_points))
 
     def get_total_active_power(self) -> float:
         """
@@ -83,7 +83,7 @@ class ProcessedMeasurement:
 
         total_active_power = active_power_1 + active_power_2 + active_power_3
 
-        return total_active_power
+        return float(total_active_power)
 
     def get_total_apparent_power(self) -> float:
         """
@@ -99,8 +99,8 @@ class ProcessedMeasurement:
             squared_measurements = np.square(data_points)
             mean = np.mean(squared_measurements)
             rms_value = np.sqrt(mean)
-            return rms_value
-
+            return float(rms_value)
+                                             
         voltage_1_rms = get_root_mean_square(self.voltage_1_data_points)
         voltage_2_rms = get_root_mean_square(self.voltage_2_data_points)
         voltage_3_rms = get_root_mean_square(self.voltage_3_data_points)
@@ -113,7 +113,7 @@ class ProcessedMeasurement:
         +voltage_2_rms * current_2_rms
         +voltage_3_rms * current_3_rms
 
-        return total_apparent_power
+        return float(total_apparent_power)
 
     def get_total_reactive_power(self) -> float:
         """
@@ -133,7 +133,7 @@ class ProcessedMeasurement:
                 (total_apparent_power + total_active_power)
                 * (total_apparent_power - total_active_power)
             )
-            return total_reactive_power
+            return float(total_reactive_power)
 
         total_reactive_power = -1 * np.sqrt(
             np.abs(
@@ -141,7 +141,7 @@ class ProcessedMeasurement:
                 * (total_apparent_power - total_active_power)
             )
         )
-        return total_reactive_power
+        return float(total_reactive_power)
 
     def get_power_factor(self) -> float:
         """
@@ -149,7 +149,7 @@ class ProcessedMeasurement:
         """
         active_power = self.get_total_active_power()
         apparent_power = self.get_total_apparent_power()
-        power_factor = active_power / apparent_power
+        power_factor = float(active_power / apparent_power)
 
         return power_factor
 

@@ -41,12 +41,12 @@ class MQTTClientService:
                 measurement_point = ProcessedMeasurement(
                     measurements=latest_measurements
                 )
-
                 logging.debug("Plotting results...")
+                print(measurement_point.get_all_measurement_attributes())
                 self.plotter.update(
                     measurement_point=measurement_point.get_all_measurement_attributes()
                 )
-            time.sleep(0.3)
+            time.sleep(0.5)
 
 
 if __name__ == "__main__":

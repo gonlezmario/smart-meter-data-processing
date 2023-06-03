@@ -3,7 +3,6 @@ import threading
 import time
 from logging.handlers import RotatingFileHandler
 
-from lib.compute_powers import ProcessedMeasurement
 from lib.models import Measurement
 from lib.mqtt_subscriber import MQTTSubscriber
 from lib.plotting import Plotter
@@ -33,19 +32,17 @@ class MQTTClientService:
                 self.mqtt_thread.start()
                 self.mqtt_thread_started = True
 
-            if self.mqtt_subscriber.is_connected:
-                logging.debug("Querying last measurements...")
-                latest_measurements = Measurement.query_latest_measurements()
+            if not self.mqtt_subscriber.is_connected:
+                logging.warning('Service could not connect to the MQTT server.')
 
-                logging.debug("Computing powers...")
-                measurement_point = ProcessedMeasurement(
-                    measurements=latest_measurements
+            logging.debug("Querying last measurements...")
+            latest_measurements = Measurement.query_latest_measurements()
+
+            logging.debug("Plotting results...")
+            self.plotter.update(
+                    latest_measurements=latest_measurements
                 )
-                logging.debug("Plotting results...")
-                print(measurement_point.get_all_measurement_attributes())
-                self.plotter.update(
-                    measurement_point=measurement_point.get_all_measurement_attributes()
-                )
+
             time.sleep(0.5)
 
 

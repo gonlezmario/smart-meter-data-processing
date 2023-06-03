@@ -19,26 +19,34 @@ class MQTTSubscriber:
         a dictionary to handle it.
         Each dictionary has the following format:
         {
-            ts: timestamp,
-            v1: voltage_1,
-            v2: voltage_2,
-            v3: voltage_3,
-            i1: current_1,
-            i2: current_2,
-            i3: current_3,
+            t: timestamp,
+            V1: voltage_1,
+            V2: voltage_2,
+            V3: voltage_3,
+            I1: current_1,
+            I2: current_2,
+            I3: current_3,
+            P: active_power,
+            Q: reactive_power,
+            S: apparent_power,
+            PF: power_factor,
         }
         """
         self.is_connected = True
         msg = message.payload.decode("utf-8")
         data = json.loads(msg)
         Measurement.create_measurement(
-            timestamp=data["ts"],
-            voltage_1=data["v1"],
-            voltage_2=data["v2"],
-            voltage_3=data["v3"],
-            current_1=data["i1"],
-            current_2=data["i2"],
-            current_3=data["i3"],
+            timestamp=data["t"],
+            voltage_1=data["V1"],
+            voltage_2=data["V2"],
+            voltage_3=data["V3"],
+            current_1=data["I1"],
+            current_2=data["I2"],
+            current_3=data["I3"],
+            active_power=data["P"],
+            reactive_power=data["Q"],
+            apparent_power=data["S"],
+            power_factor=data["PF"],
         )
 
     def connect(self):

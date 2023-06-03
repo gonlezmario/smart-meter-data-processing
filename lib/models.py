@@ -1,7 +1,7 @@
-import configparser
+from lib.config import MAXIMUM_PLOT_POINTS
 import logging
 
-from sqlalchemy import JSON, Boolean, Column, Integer, create_engine, func
+from sqlalchemy import Column, Integer, create_engine, Float
 from sqlalchemy.orm import declarative_base, scoped_session, sessionmaker
 
 from lib.config import DATABASE_URL
@@ -19,13 +19,17 @@ class Measurement(Base):
     __tablename__ = "measurements"
 
     id = Column(Integer, primary_key=True)
-    timestamp = Column(Integer)
-    voltage_1 = Column(Integer)
-    voltage_2 = Column(Integer)
-    voltage_3 = Column(Integer)
-    current_1 = Column(Integer)
-    current_2 = Column(Integer)
-    current_3 = Column(Integer)
+    timestamp = Column(Float)
+    voltage_1 = Column(Float)
+    voltage_2 = Column(Float)
+    voltage_3 = Column(Float)
+    current_1 = Column(Float)
+    current_2 = Column(Float)
+    current_3 = Column(Float)
+    active_power = Column(Float)
+    reactive_power = Column(Float)
+    apparent_power = Column(Float)
+    power_factor = Column(Float)
 
     @staticmethod
     def _session_initialization() -> sessionmaker:
@@ -43,7 +47,8 @@ class Measurement(Base):
 
     @classmethod
     def create_measurement(
-        cls, timestamp, voltage_1, voltage_2, voltage_3, current_1, current_2, current_3
+        cls, timestamp, voltage_1, voltage_2, voltage_3, current_1, current_2,
+        current_3, active_power, reactive_power, apparent_power, power_factor
     ) -> bool:
         """
         Initializes a session, creates a class instance with the given parameters and commits them
@@ -59,6 +64,10 @@ class Measurement(Base):
                 current_1=current_1,
                 current_2=current_2,
                 current_3=current_3,
+                active_power=active_power,
+                reactive_power=reactive_power,
+                apparent_power=apparent_power,
+                power_factor=power_factor
             )
             session.add(measurement)
             session.commit()
@@ -70,36 +79,20 @@ class Measurement(Base):
             return False
 
     @classmethod
-    def query_latest_measurements(cls) -> list:
+    def query_latest_measurements(cls, measurements_limit: int=MAXIMUM_PLOT_POINTS) -> list:
         """
         """
         session = cls._session_initialization()
 
         # Get the latest timestamp in the database
-        latest_timestamp_db = (
-            session.query(Measurement.timestamp.distinct())
-            .order_by(Measurement.timestamp.desc())
-            .limit(1)
-            .scalar()
-        )
-
-        # Get the previous timestamp to the latest
-        previous_timestamp_db = (
-            session.query(Measurement.timestamp.distinct())
-            .filter(Measurement.timestamp < latest_timestamp_db)
-            .order_by(Measurement.timestamp.desc())
-            .limit(1)
-            .scalar()
-        )
-
-        # Get all the measurements with the previous timestamp to the latest
-        grouped_measurements = (
+        latest_measurements_db = (
             session.query(Measurement)
-            .filter(Measurement.timestamp == previous_timestamp_db)
+            .order_by(Measurement.timestamp.desc())
+            .limit(measurements_limit)
             .all()
         )
 
-        return grouped_measurements
+        return latest_measurements_db[::-1]
 
 
 # Create the model table if it does not exist

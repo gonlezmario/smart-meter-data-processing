@@ -12,12 +12,15 @@ class MQTTSubscriber:
         self.topic = topic
         self.is_connected = False
 
-    # Callback function to handle incoming messages
     def on_message(self, client, userdata, message):
         """
+        Callback function to handle incoming messages.
+
         Decode the observed published message to utf-8 and then transform it into
-        a dictionary to handle it.
-        Each dictionary has the following format:
+        a dictionary to handle it avoiding syntax and formatting errors from
+        JSONs to Python.
+
+        Each temporary dictionary should have the following format:
         {
             t: timestamp,
             V1: voltage_1,
@@ -31,6 +34,14 @@ class MQTTSubscriber:
             S: apparent_power,
             PF: power_factor,
         }
+
+        Finally, the dict object is added and committed in the db
+        The MQTT connection flag is also written in this function since
+        it could also be assigned to true in the connect() function even
+        if something is misconfigured. If a message is indeed received,
+        however, it is more probable that everything worked out correctly,
+        and this flag is used only to update the plot, so there is no
+        case scenario or edge case where this could be problematic.
         """
         self.is_connected = True
         msg = message.payload.decode("utf-8")
@@ -50,27 +61,25 @@ class MQTTSubscriber:
         )
 
     def connect(self):
-        # Create MQTT client instance
+        """
+        Function establishing initial MQTT connection. The bare minimum
+        requirements to do so are:
+
+        -Connect to an address and port
+        -Set a callback function to handle incoming messages
+        -Subscribe to a given server MQTT topic
+        -Keep the connection alive actively
+        """
         self.client = mqtt.Client()
-
-        # Set callback function for incoming messages
         self.client.on_message = self.on_message
-
-        # Connect to MQTT broker
-        # Use the appropriate port for your Mosquitto broker
         self.client.connect(self.broker_address, self.port)
-
-        # Subscribe to the topic
         self.client.subscribe(self.topic)
-
-        # Start MQTT loop to receive messages
         self.client.loop_start()
 
-        # Flag confirming it the connection was successful
-        
-
     def disconnect(self):
+        """
+        Safely terminate MQTT connection
+        """
         self.is_connected = False
-        # Stop MQTT loop and disconnect from MQTT broker
         self.client.loop_stop()
         self.client.disconnect()

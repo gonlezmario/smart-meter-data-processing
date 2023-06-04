@@ -1,253 +1,96 @@
-2023-06-03T19:19:09 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:19:09 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:19:09 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:09 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:09 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:09 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:10 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:10 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:10 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:11 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:11 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:11 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:12 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:12 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:12 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:12 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:13 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:13 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:13 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:13 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:14 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:14 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:14 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:14 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:15 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:15 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:15 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:15 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:16 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:16 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:16 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:16 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:17 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:17 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:17 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:17 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:18 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:18 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:18 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:18 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:19 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:19 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:19 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:19 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:20 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:20 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:20 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:20 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:21 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:21 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:21 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:21 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:22 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:22 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:22 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:22 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:23 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:23 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:23 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:23 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:24 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:24 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:24 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:24 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:19:25 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:19:25 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:21:32 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:21:32 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:21:32 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:21:32 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:21:33 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:21:33 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:21:33 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:21:34 ERROR plotting.py:174 in            update(): list index out of range
-2023-06-03T19:23:02 INFO main.py:72 in            <module>(): Received stopping signal. Stopping service...
-2023-06-03T19:23:02 INFO main.py:22 in            stop(): Disconnecting from the MQTT broker...
-2023-06-03T19:23:06 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:23:06 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:23:06 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:24:03 INFO main.py:72 in            <module>(): Received stopping signal. Stopping service...
-2023-06-03T19:24:03 INFO main.py:22 in            stop(): Disconnecting from the MQTT broker...
-2023-06-03T19:24:04 INFO main.py:25 in            stop(): Joining MQTT Subscriber thread...
-2023-06-03T19:24:06 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:24:06 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:24:06 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:33:23 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:33:23 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:33:23 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:35:04 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:35:04 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:35:04 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:35:04 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:05 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:05 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:06 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:06 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:07 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:07 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:08 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:08 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:09 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:09 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:10 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:10 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:11 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:11 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:12 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:12 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:13 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:13 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:14 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:14 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:15 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:16 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:16 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:17 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:17 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:18 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:18 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:19 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:19 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:20 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:20 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:21 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:21 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:22 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:22 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:23 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:23 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:24 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:24 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:25 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:25 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:26 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:26 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:27 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:28 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:28 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:29 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:29 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:30 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:30 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:31 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:31 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:32 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:32 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:33 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:33 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:34 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:34 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:35 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:35 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:36 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:36 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:37 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:37 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:38 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:38 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:39 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:40 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:40 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:41 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:41 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:42 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:42 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:43 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:43 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:47 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:35:47 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:35:47 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:35:47 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:47 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:35:47 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:48 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:48 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:49 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:49 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:50 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:51 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:51 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:52 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:52 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:53 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:53 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:54 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:54 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:55 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:55 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:56 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:56 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:57 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:57 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:58 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:58 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:59 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:35:59 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:36:00 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:36:00 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:36:01 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:36:01 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:36:02 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:36:02 ERROR plotting.py:173 in            update(): 'NoneType' object is not iterable
-2023-06-03T19:36:03 INFO main.py:72 in            <module>(): Received stopping signal. Stopping service...
-2023-06-03T19:36:03 INFO main.py:22 in            stop(): Disconnecting from the MQTT broker...
-2023-06-03T19:36:03 INFO main.py:25 in            stop(): Joining MQTT Subscriber thread...
-2023-06-03T19:36:07 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:36:07 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:36:07 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:40:43 INFO main.py:72 in            <module>(): Received stopping signal. Stopping service...
-2023-06-03T19:40:43 INFO main.py:22 in            stop(): Disconnecting from the MQTT broker...
-2023-06-03T19:40:47 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:40:47 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:40:47 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:41:03 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:41:03 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:41:03 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:41:03 ERROR plotting.py:164 in            update(): list index out of range
-2023-06-03T19:41:04 ERROR plotting.py:164 in            update(): list index out of range
-2023-06-03T19:41:04 ERROR plotting.py:164 in            update(): list index out of range
-2023-06-03T19:52:21 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:52:21 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:52:21 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:55:49 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:55:49 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:55:49 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:56:13 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:56:13 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:56:13 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T19:56:44 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T19:56:44 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T19:56:44 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T20:24:44 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T20:24:44 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T20:24:44 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T20:24:46 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T20:24:47 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T20:24:48 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T20:24:49 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T20:24:50 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T20:24:52 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T20:24:53 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T20:24:53 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T20:25:11 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
-2023-06-03T20:25:11 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
-2023-06-03T20:25:11 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T20:25:11 ERROR plotting.py:168 in            update(): list index out of range
-2023-06-03T20:25:12 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
-2023-06-03T20:25:12 ERROR plotting.py:168 in            update(): list index out of range
-2023-06-03T20:25:13 ERROR plotting.py:168 in            update(): list index out of range
-2023-06-03T20:25:13 ERROR plotting.py:168 in            update(): list index out of range
-2023-06-03T20:32:05 INFO main.py:72 in            <module>(): Received stopping signal. Stopping service...
-2023-06-03T20:32:05 INFO main.py:22 in            stop(): Disconnecting from the MQTT broker...
-2023-06-03T20:32:06 INFO main.py:25 in            stop(): Joining MQTT Subscriber thread...
+2023-06-04T15:59:34 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
+2023-06-04T15:59:34 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
+2023-06-04T15:59:34 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:34 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:35 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:35 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:35 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:35 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:36 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:36 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:37 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:37 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:37 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:37 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:38 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:38 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:38 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:38 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:39 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:39 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:39 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:39 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:40 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:40 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:40 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:40 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:41 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:41 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:41 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:41 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:42 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:42 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:42 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:42 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:43 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:43 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T15:59:43 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T15:59:43 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:34 INFO main.py:68 in            <module>(): Initializing MQTT Client Service...
+2023-06-04T16:02:34 INFO main.py:31 in            main(): Starting thread for the MQTT broker...
+2023-06-04T16:02:34 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:34 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:35 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:35 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:35 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:35 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:36 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:36 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:36 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:36 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:37 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:37 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:37 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:37 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:38 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:38 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:38 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:38 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:39 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:39 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:39 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:39 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:40 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:40 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:40 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:40 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:41 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:41 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:41 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:41 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:42 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:42 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:42 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:42 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:43 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:43 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:43 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:43 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:44 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:44 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:44 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:44 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:45 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:45 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:45 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:45 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:46 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:46 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:46 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:46 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:47 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:47 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:47 WARNING main.py:36 in            main(): Service could not connect to the MQTT server.
+2023-06-04T16:02:47 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:48 ERROR plotting.py:217 in            update(): list index out of range
+2023-06-04T16:02:48 ERROR plotting.py:217 in            update(): list index out of range

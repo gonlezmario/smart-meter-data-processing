@@ -16,6 +16,10 @@ Base = declarative_base()
 
 
 class Measurement(Base):
+    """
+    Object Relational Mapping Class
+    """
+
     __tablename__ = "measurements"
 
     id = Column(Integer, primary_key=True)
@@ -47,8 +51,18 @@ class Measurement(Base):
 
     @classmethod
     def create_measurement(
-        cls, timestamp, voltage_1, voltage_2, voltage_3, current_1, current_2,
-        current_3, active_power, reactive_power, apparent_power, power_factor
+        cls,
+        timestamp,
+        voltage_1,
+        voltage_2,
+        voltage_3,
+        current_1,
+        current_2,
+        current_3,
+        active_power,
+        reactive_power,
+        apparent_power,
+        power_factor,
     ) -> bool:
         """
         Initializes a session, creates a class instance with the given parameters and commits them
@@ -67,7 +81,7 @@ class Measurement(Base):
                 active_power=active_power,
                 reactive_power=reactive_power,
                 apparent_power=apparent_power,
-                power_factor=power_factor
+                power_factor=power_factor,
             )
             session.add(measurement)
             session.commit()
@@ -79,12 +93,25 @@ class Measurement(Base):
             return False
 
     @classmethod
-    def query_latest_measurements(cls, measurements_limit: int=MAXIMUM_PLOT_POINTS) -> list:
+    def query_latest_measurements(
+        cls, measurements_limit: int = MAXIMUM_PLOT_POINTS
+    ) -> list:
         """
+        Function equivalent to the following SQL query:
+
+        SELECT *
+        FROM Measurement
+        ORDER BY timestamp DESC
+        LIMIT measurements_limit;
+
+        To get the latest measurements, the data is ordered from biggest
+        to smallest UNIX timestamp. However, it is more practical to order
+        them chronologically once the latest measurements have been fetched
+        to plot them in an ordered manner. Therefore, the resulting list
+        should be reversed.
         """
         session = cls._session_initialization()
 
-        # Get the latest timestamp in the database
         latest_measurements_db = (
             session.query(Measurement)
             .order_by(Measurement.timestamp.desc())
@@ -95,5 +122,4 @@ class Measurement(Base):
         return latest_measurements_db[::-1]
 
 
-# Create the model table if it does not exist
 Base.metadata.create_all(bind=create_engine(DATABASE_URL))
